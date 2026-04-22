@@ -11,11 +11,10 @@
 #pragma config IESO = OFF
 #pragma config FCMEN = OFF
 
-unsigned int adc;
-unsigned int duty;
+#define _XTAL_FREQ 8000000UL 
 
 void PWM_Init(void){
-    OSCCON = 0x01110100;
+    OSCCON = 0b01110100;
     
     TRISCbits.TRISC2 = 0;
     TRISCbits.TRISC1 = 0;
@@ -29,6 +28,12 @@ void PWM_Init(void){
     T2CONbits.T2CKPS = 0b10;
     T4CONbits.T4CKPS = 0b10;
     T6CONbits.T6CKPS = 0b10;
+    
+    CCPTMRS0bits.C1TSEL = 0b00;
+    CCPTMRS0bits.C2TSEL = 0b00;
+    CCPTMRS0bits.C3TSEL = 0b01;
+    CCPTMRS0bits.C4TSEL = 0b01;
+    CCPTMRS1bits.C5TSEL = 0b10;
     
     T2CONbits.TMR2ON = 1;
     T4CONbits.TMR4ON = 1;
@@ -51,7 +56,7 @@ void ADC_Init(void)
     ANSELA = 0b00101111;
     ADCON0bits.ADON = 1;
     
-    ADCON1bits = 0b11010000;   
+    ADCON1 = 0b11010000;   
 }
 
 unsigned int ADC_to_Duty(unsigned int adc)
