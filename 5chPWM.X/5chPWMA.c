@@ -11,6 +11,8 @@
 #pragma config IESO = OFF
 #pragma config FCMEN = OFF
 
+unsigned int adc;
+unsigned int duty;
 
 void PWM_Init(void){
     OSCCON = 0x01110100;
@@ -48,4 +50,105 @@ void ADC_Init(void)
     TRISA = 0b00101111;
     ANSELA = 0b00101111;
     ADCON0bits.ADON = 1;
+    
+    ADCON1bits = 0b11010000;   
+}
+
+unsigned int ADC_to_Duty(unsigned int adc)
+{
+    if(adc < 4) adc = 0;
+    if(adc > 1023) adc = 1023;
+    
+    return (adc * 499UL) / 1023UL;
+}
+
+
+void pwm1_set(void)
+{
+    ADCON0bits.CHS = 0b00000;
+    __delay_us(10);
+    ADCON0bits.GO_nDONE = 1;
+    while(ADCON0bits.GO_nDONE);
+    
+    unsigned int adc = ((unsigned int) ADRESH << 8) | ADRESL;
+    
+    unsigned int duty = ADC_to_Duty(adc);
+    
+    CCPR1L = duty >> 2;
+    CCP1CONbits.DC1B = duty & 0x03;
+}
+
+void pwm2_set(void)
+{
+    ADCON0bits.CHS = 0b00001;
+    __delay_us(10);
+    ADCON0bits.GO_nDONE = 1;
+    while(ADCON0bits.GO_nDONE);
+    
+    unsigned int adc = ((unsigned int) ADRESH << 8) | ADRESL;
+    
+    unsigned int duty = ADC_to_Duty(adc);
+    
+    CCPR2L = duty >> 2;
+    CCP2CONbits.DC2B = duty & 0x03;
+}
+
+void pwm3_set(void)
+{
+    ADCON0bits.CHS = 0b00010;
+    __delay_us(10);
+    ADCON0bits.GO_nDONE = 1;
+    while(ADCON0bits.GO_nDONE);
+    
+    unsigned int adc = ((unsigned int) ADRESH << 8) | ADRESL;
+    
+    unsigned int duty = ADC_to_Duty(adc);
+    
+    CCPR3L = duty >> 2;
+    CCP3CONbits.DC3B = duty & 0x03;
+}
+
+void pwm4_set(void)
+{
+    ADCON0bits.CHS = 0b00011;
+    __delay_us(10);
+    ADCON0bits.GO_nDONE = 1;
+    while(ADCON0bits.GO_nDONE);
+    
+    unsigned int adc = ((unsigned int) ADRESH << 8) | ADRESL;
+    
+    unsigned int duty = ADC_to_Duty(adc);
+    
+    CCPR4L = duty >> 2;
+    CCP4CONbits.DC4B = duty & 0x03;
+}
+
+void pwm5_set(void)
+{
+    ADCON0bits.CHS = 0b00100;
+    __delay_us(10);
+    ADCON0bits.GO_nDONE = 1;
+    while(ADCON0bits.GO_nDONE);
+    
+    unsigned int adc = ((unsigned int) ADRESH << 8) | ADRESL;
+    
+    unsigned int duty = ADC_to_Duty(adc);
+    
+    CCPR5L = duty >> 2;
+    CCP5CONbits.DC5B = duty & 0x03;
+}
+
+void main(void)
+{
+    PWM_Init();
+    ADC_Init();
+    
+    while(1)
+    {
+        pwm1_set();
+        pwm2_set();
+        pwm3_set();
+        pwm4_set();
+        pwm5_set();
+    }
 }
