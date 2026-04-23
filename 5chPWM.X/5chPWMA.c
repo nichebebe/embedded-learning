@@ -10,6 +10,7 @@
 #pragma config CLKOUTEN = OFF
 #pragma config IESO = OFF
 #pragma config FCMEN = OFF
+#pragma config LVP = OFF
 
 #define _XTAL_FREQ 8000000UL 
 
@@ -143,8 +144,48 @@ void pwm5_set(void)
     CCP5CONbits.DC5B = duty & 0x03;
 }
 
+void EEPROM_Write(unsigned char addr, unsigned char data)
+{
+    EEADRL = addr;
+    EEDATL = data;
+    EECON1bits.CFGS = 0;
+    EECON1bits.EEPGD = 0;
+    EECON1bits.WREN = 1;
+    
+    INTCONbits.GIE = 0;
+    EECON2 = 0x55;
+    EECON2 = 0xAA;
+    EECON1bits.WR = 1;
+        
+    while(EECON1bits.WR);
+    
+    EECON1bits.WREN = 0;
+    INTCON.GIE = 1;
+}
+
+void EEPRON_Read(unsigned char addr)
+{
+    EEADRL = addr;
+    EECON1bits.CFGS = 0;
+    EECON1bits.EEPGD = 0;
+    EECON1bits.RD = 1;
+    
+    return EEDATL;
+}
+
+unsigned int Apply_offset(unsigned int adc_vol, unsigned int offset)
+{
+    if(adc_vol <= 2) return 0;
+    if(adc_vol > 1023) return 1023;
+    if(adc_vol >2 & adc_vol <= 1023)
+    {
+        return offset + ((unsigned int)(adc_vol - 2) * (1023UL - offset)) / (1023UL - 2);
+    }
+}
+
 void main(void)
 {
+    unsigned char sw_now = 0
     PWM_Init();
     ADC_Init();
     
