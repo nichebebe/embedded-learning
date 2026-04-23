@@ -12,7 +12,18 @@
 #pragma config FCMEN = OFF
 #pragma config LVP = OFF
 
-#define _XTAL_FREQ 8000000UL 
+#define _XTAL_FREQ 8000000UL
+
+#define VOL1_CH 0b00001
+#define VOL2_CH 0b00010
+#define VOL3_CH 0b00011
+#define VOL4_CH 0b00100
+#define VOL5_CH 0b00101
+
+unsigned char ch[5] = {VOL1_CH, VOL2_CH, VOL3_CH, VOL4_CH, VOL5_CH};
+
+volatile unsigned int press_time = 0;
+volatile unsigned char long_press = 0;
 
 void PWM_Init(void){
     OSCCON = 0b01110100;
@@ -68,79 +79,50 @@ unsigned int ADC_to_Duty(unsigned int adc)
     return (adc * 499UL) / 1023UL;
 }
 
-
-void pwm1_set(void)
+unsigned int Read_ADC(unsigned char ch_sel)
 {
-    ADCON0bits.CHS = 0b00000;
+    ADCON0bits.CHS = ch_sel;
     __delay_us(10);
     ADCON0bits.GO_nDONE = 1;
     while(ADCON0bits.GO_nDONE);
+    return ((unsigned int) ADRESH << 8) | ADRESL;
+}
+
+unsigned int PWM_Calc(unsigned int adc)
+{
+    if(adc < 4) adc = 0;
+    if(adc > 1023) adc = 1023;
     
-    unsigned int adc = ((unsigned int) ADRESH << 8) | ADRESL;
-    
-    unsigned int duty = ADC_to_Duty(adc);
-    
+    return (adc * 499UL) / 1023UL;
+}
+
+void PWM_1_APPLY(unsigned int duty)
+{
     CCPR1L = duty >> 2;
     CCP1CONbits.DC1B = duty & 0x03;
 }
 
-void pwm2_set(void)
+void PWM_2_APPLY(unsigned int duty)
 {
-    ADCON0bits.CHS = 0b00001;
-    __delay_us(10);
-    ADCON0bits.GO_nDONE = 1;
-    while(ADCON0bits.GO_nDONE);
-    
-    unsigned int adc = ((unsigned int) ADRESH << 8) | ADRESL;
-    
-    unsigned int duty = ADC_to_Duty(adc);
-    
-    CCPR2L = duty >> 2;
+    CCPR2L =duty >> 2;
     CCP2CONbits.DC2B = duty & 0x03;
 }
 
-void pwm3_set(void)
+void PWM_3_APPLY(unsigned int duty)
 {
-    ADCON0bits.CHS = 0b00010;
-    __delay_us(10);
-    ADCON0bits.GO_nDONE = 1;
-    while(ADCON0bits.GO_nDONE);
-    
-    unsigned int adc = ((unsigned int) ADRESH << 8) | ADRESL;
-    
-    unsigned int duty = ADC_to_Duty(adc);
-    
-    CCPR3L = duty >> 2;
+    CCPR3L =duty >> 2;
     CCP3CONbits.DC3B = duty & 0x03;
 }
 
-void pwm4_set(void)
+void PWM_4_APPLY(unsigned int duty)
 {
-    ADCON0bits.CHS = 0b00011;
-    __delay_us(10);
-    ADCON0bits.GO_nDONE = 1;
-    while(ADCON0bits.GO_nDONE);
-    
-    unsigned int adc = ((unsigned int) ADRESH << 8) | ADRESL;
-    
-    unsigned int duty = ADC_to_Duty(adc);
-    
-    CCPR4L = duty >> 2;
+    CCPR4L =duty >> 2;
     CCP4CONbits.DC4B = duty & 0x03;
 }
 
-void pwm5_set(void)
+void PWM_5_APPLY(unsigned int duty)
 {
-    ADCON0bits.CHS = 0b00100;
-    __delay_us(10);
-    ADCON0bits.GO_nDONE = 1;
-    while(ADCON0bits.GO_nDONE);
-    
-    unsigned int adc = ((unsigned int) ADRESH << 8) | ADRESL;
-    
-    unsigned int duty = ADC_to_Duty(adc);
-    
-    CCPR5L = duty >> 2;
+    CCPR5L =duty >> 2;
     CCP5CONbits.DC5B = duty & 0x03;
 }
 
@@ -163,7 +145,7 @@ void EEPROM_Write(unsigned char addr, unsigned char data)
     INTCON.GIE = 1;
 }
 
-void EEPRON_Read(unsigned char addr)
+void EEPROM_Read(unsigned char addr)
 {
     EEADRL = addr;
     EECON1bits.CFGS = 0;
@@ -185,16 +167,41 @@ unsigned int Apply_offset(unsigned int adc_vol, unsigned int offset)
 
 void main(void)
 {
-    unsigned char sw_now = 0
+    unsigned int adc_raw[5];
+    unsigned int offset[5];
+    unsigned int ui_level[5] = {0, 0, 0, 0, 0};
+    unsigned int ui_start[5] = {0, 0, 0, 0, 0};
+    signed char ui_dir = 1;
     PWM_Init();
     ADC_Init();
     
+    unsigned char val[5];
+    for(char i; i < 5; i++){
+        val[i] = EEPROM_Read(i);
+        if(val[i] == 0xff)
+        {
+            offset[i] = 0;
+        }else{
+            offset[i] = ((unsigned int) val[i]) << 2;
+        }
+    }
+    
     while(1)
     {
-        pwm1_set();
-        pwm2_set();
-        pwm3_set();
-        pwm4_set();
-        pwm5_set();
+        unsigned char sw_now = PORTBbits.RB4;
+        static unsigned char sw_prev = 1;
+        
+        if((sw_prev == 1) && (sw_now == 0))
+        {
+            press_time = 0;
+            long_press = 0;
+            
+            for(char i; i < 4; i++)
+            {
+                ui_level[i] = offset[i];
+                ui_start[i] = offset[i];
+            }
+            ui_dir = 1;
+        }
     }
 }
