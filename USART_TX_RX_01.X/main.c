@@ -1,0 +1,88 @@
+#include <xc.h>
+#include <string.h>
+#include <stdio.h>
+//#include <pic16F1938.h>
+
+#pragma config FOSC = INTOSC
+#pragma config WDTE = OFF
+#pragma config PWRTE = OFF
+#pragma config CP = OFF
+#pragma config MCLRE = OFF
+#pragma config BOREN = ON
+#pragma config CLKOUTEN = OFF
+#pragma config IESO = OFF
+#pragma config FCMEN = OFF
+#pragma config LVP = OFF
+
+#define _XTAL_FREQ 8000000UL
+
+void USART_Init(void) {
+    OSCCON = 0b01110010; //8MHz
+    TRISCbits.TRISC6 = 1;
+    TRISCbits.TRISC7 = 1;
+    TRISAbits.TRISA1 = 0;
+    ANSELAbits.ANSA1 = 0;
+
+    TXSTAbits.SYNC = 0;
+    TXSTAbits.BRGH = 1;
+    BAUDCONbits.BRG16 = 0;
+    SPBRG = 51;
+
+    RCSTAbits.SPEN = 1;
+    TXSTAbits.TXEN = 1;
+    
+    RCSTAbits.CREN = 1;
+}
+
+void main(void) {
+    USART_Init();
+
+//    while (1) {
+//        LATAbits.LATA1 = 1;
+//        
+//        unsigned char Strings[] = "Hello\r\n";
+//        unsigned int len = strlen(Strings);
+//
+//        for (unsigned char i = 0; i < len; i++) {
+//            while (!PIR1bits.TXIF);
+//            TXREG = Strings[i];
+//
+//        }
+//        __delay_ms(500);
+//    }
+
+    // while(1) 
+    // { 
+    //     if(PIR1bits.RCIF) { 
+    //         unsigned char data = RCREG;
+    //         while(!PIR1bits.TXIF);
+    //         TXREG = data;
+    //     }
+    // }
+    while(1)
+    {
+//        LATAbits.LATA1 = 1;
+//        __delay_ms(500);
+//        LATAbits.LATA1 = 0;
+//        __delay_ms(500);
+        
+        if(PIR1bits.RCIF)
+        {
+            unsigned char data = RCREG;
+            
+            while(!PIR1bits.TXIF);
+            TXREG = data;
+            
+            if(data == 'a')
+            {
+                LATAbits.LATA1 = 1;
+            }
+            else if(data == 'b'){
+                LATAbits.LATA1 = 0;
+            }
+            else if(data == 't'){
+                LATAbits.LATA1 = !LATAbits.LATA1;
+            }
+        }
+    }
+}

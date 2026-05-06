@@ -14,18 +14,20 @@
 
 #define _XTAL_FREQ 8000000UL
 
-#define VOL1_CH 0b00001
-#define VOL2_CH 0b00010
-#define VOL3_CH 0b00011
-#define VOL4_CH 0b00100
-#define VOL5_CH 0b00101
+#define VOL1_CH 0b00000
+#define VOL2_CH 0b00001
+#define VOL3_CH 0b00010
+#define VOL4_CH 0b00011
+#define VOL5_CH 0b00100
 
 unsigned char ch[5] = {VOL1_CH, VOL2_CH, VOL3_CH, VOL4_CH, VOL5_CH};
 
 volatile unsigned int press_time = 0;
 volatile unsigned char long_press = 0;
+unsigned int count = 0;
+volatile unsigned char sw_pressed = 0;
 
-void PWM_Init(void) {
+void PIN_Init(void) {
     OSCCON = 0b01110100;
 
     TRISCbits.TRISC2 = 0;
@@ -59,6 +61,16 @@ void PWM_Init(void) {
     CCP3CON = 0b00001100;
     CCP4CON = 0b00001100;
     CCP5CON = 0b00001100;
+    
+    OPTION_REGbits.TMR0CS = 0;
+    OPTION_REGbits.PSA = 0;
+    OPTION_REGbits.PS2 = 0;
+    OPTION_REGbits.PS1 = 1;
+    OPTION_REGbits.PS0 = 0;
+    TMR0 = 5;
+    INTCONbits.TMR0IF = 0;
+    INTCONbits.TMR0IE = 1;
+    INTCONbits.GIE = 1;
 }
 
 void ADC_Init(void) {
@@ -85,27 +97,27 @@ void PWM_Apply(unsigned char i, unsigned int adc) {
 
     switch (i) {
         case 0:
-            CCPR1L = duty >> 2;
+            CCPR1L = (unsigned char) (duty >> 2);
             CCP1CONbits.DC1B = duty & 0x03;
             break;
 
         case 1:
-            CCPR2L = duty >> 2;
+            CCPR2L = (unsigned char) (duty >> 2);
             CCP2CONbits.DC2B = duty & 0x03;
             break;
 
         case 2:
-            CCPR3L = duty >> 2;
+            CCPR3L = (unsigned char) (duty >> 2);
             CCP3CONbits.DC3B = duty & 0x03;
             break;
 
         case 3:
-            CCPR4L = duty >> 2;
+            CCPR4L = (unsigned char) (duty >> 2);
             CCP4CONbits.DC4B = duty & 0x03;
             break;
 
         case 4:
-            CCPR5L = duty >> 2;
+            CCPR5L = (unsigned char) (duty >> 2);
             CCP5CONbits.DC5B = duty & 0x03;
             break;
     }
@@ -126,7 +138,7 @@ void EEPROM_Write(unsigned char addr, unsigned char data) {
     while (EECON1bits.WR);
 
     EECON1bits.WREN = 0;
-    INTCON.GIE = 1;
+    INTCONbits.GIE = 1;
 }
 
 unsigned char EEPROM_Read(unsigned char addr) {
@@ -146,7 +158,21 @@ unsigned int Apply_offset(unsigned int adc_vol, unsigned int offset) {
     
 }
 
+void __interrupt() isr(void)
+{
+    if(INTCONbits.TMR0IF)
+    {
+        TMR0 = 5;
+        INTCONbits.TMR0IF = 0;
+        
+        if((sw_pressed==1) && (press_time < 10000)){
+            press_time++;
+        }
+    }
+}
+
 void main(void) {
+    ANSELBbits.ANSB4 = 0;
     TRISBbits.TRISB4 = 1;
     //OPTION_REGbits.nWPUEN = 0;
     //WPUBbits.WPUB4 = 1;
@@ -156,7 +182,7 @@ void main(void) {
     unsigned int ui_start[5] = {0, 0, 0, 0, 0};
     signed char ui_dir[5] = {1, 1, 1, 1, 1};
     unsigned int write_adc[5] = {0, 0, 0, 0, 0};
-    PWM_Init();
+    PIN_Init();
     ADC_Init();
 
     unsigned char val[5];
@@ -176,7 +202,7 @@ void main(void) {
         if ((sw_prev == 1) && (sw_now == 0)) {
             press_time = 0;
             long_press = 0;
-
+            sw_pressed = 1;
             for (char i = 0; i < 5; i++) {
                 ui_level[i] = Stored_offset[i];
                 ui_start[i] = Stored_offset[i];
@@ -185,21 +211,20 @@ void main(void) {
         }
 
         if (sw_now == 0) {
-            if (press_time < 1000) press_time++;
-            if (press_time > 50) long_press = 1;
+            if (press_time > 2500) long_press = 1;
 
             for (char i = 0; i < 5; i++) {
                 if (long_press) {
                     if (ui_dir[i] > 0) {
                         if (ui_level[i] < 1023 - 4) {
-                            ui_level[i] += 2;
+                            ui_level[i] += 1;
                         } else {
                             ui_level[i] = 1023;
                             ui_dir[i] = -1;
                         }
                     } else {
                         if (ui_level[i] > ui_start[i] + 4) {
-                            ui_level[i] -= 2;
+                            ui_level[i] -= 1;
                         } else {
                             ui_level[i] = ui_start[i];
                             ui_dir[i] = 1;
@@ -210,6 +235,7 @@ void main(void) {
         }
 
         if ((sw_prev == 0) && (sw_now == 1)) {
+            sw_pressed = 0;
             if (long_press == 0) {
                 for (char i = 0; i < 5; i++) {
                     Stored_offset[i] = Read_ADC(ch[i]);

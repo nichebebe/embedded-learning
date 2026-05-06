@@ -1,0 +1,41 @@
+[p GLOBOPT AUTOSTATIC IEEE_DBL IEEE_FLT PIC14 PIC14E ]
+[d version 1.1 ]
+[d edition pro ]
+[d chip 16F1938 ]
+[d frameptr 6 ]
+"10 C:\Program Files\Microchip\xc8\v3.10\pic\sources\c99\common\sprcadd.c
+[v ___fladd __fladd `(d  1 e 4 0 ]
+"4 C:\Program Files\Microchip\xc8\v3.10\pic\sources\c99\common\Umul8_16.c
+[v __Umul8_16 _Umul8_16 `(ui  1 e 2 0 ]
+"6 C:\Program Files\Microchip\xc8\v3.10\pic\sources\c99\pic\__eeprom.c
+[v ___eecpymem __eecpymem `(v  1 e 1 0 ]
+"39
+[v ___memcpyee __memcpyee `(v  1 e 1 0 ]
+"15 C:\Users\moona\Documents\Ryota_BLG\Embedded_Projects\embedded-learning\USART_TX_01.X\main.c
+[v _USART_Init USART_Init `(v  1 e 1 0 ]
+"21
+[v _main main `(v  1 e 1 0 ]
+"1849 C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h
+[v _OSCCON OSCCON `VEuc  1 e 1 @153 ]
+[s S23 . 1 `uc 1 TX9D 1 0 :1:0 
+`uc 1 TRMT 1 0 :1:1 
+`uc 1 BRGH 1 0 :1:2 
+`uc 1 SENDB 1 0 :1:3 
+`uc 1 SYNC 1 0 :1:4 
+`uc 1 TXEN 1 0 :1:5 
+`uc 1 TX9 1 0 :1:6 
+`uc 1 CSRC 1 0 :1:7 
+]
+"3603
+[u S32 . 1 `S23 1 . 1 0 ]
+[v _TXSTAbits TXSTAbits `VES32  1 e 1 @414 ]
+"21 C:\Users\moona\Documents\Ryota_BLG\Embedded_Projects\embedded-learning\USART_TX_01.X\main.c
+[v _main main `(v  1 e 1 0 ]
+{
+"29
+} 0
+"15
+[v _USART_Init USART_Init `(v  1 e 1 0 ]
+{
+"19
+} 0

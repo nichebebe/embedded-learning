@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <executable name="dist/default/debug\5chPWM.X.debug.hex">
+    <memory name="program">
+      <units>words</units>
+      <length>16384</length>
+      <used>1179</used>
+      <free>15205</free>
+    </memory>
+    <memory name="data">
+      <units>bytes</units>
+      <length>1024</length>
+      <used>160</used>
+      <free>864</free>
+    </memory>
+  </executable>
+</project>

@@ -1,0 +1,148 @@
+[p GLOBOPT AUTOSTATIC IEEE_DBL IEEE_FLT PIC14 PIC14E ]
+[d version 1.1 ]
+[d edition pro ]
+[d chip 16F1938 ]
+[d frameptr 6 ]
+"10 C:\Program Files\Microchip\xc8\v3.10\pic\sources\c99\common\sprcadd.c
+[v ___fladd __fladd `(d  1 e 4 0 ]
+"5 C:\Program Files\Microchip\xc8\v3.10\pic\sources\c99\common\strlen.c
+[v _strlen strlen `(ui  1 e 2 0 ]
+"4 C:\Program Files\Microchip\xc8\v3.10\pic\sources\c99\common\Umul8_16.c
+[v __Umul8_16 _Umul8_16 `(ui  1 e 2 0 ]
+"6 C:\Program Files\Microchip\xc8\v3.10\pic\sources\c99\pic\__eeprom.c
+[v ___eecpymem __eecpymem `(v  1 e 1 0 ]
+"39
+[v ___memcpyee __memcpyee `(v  1 e 1 0 ]
+"19 C:\Users\moona\Documents\Ryota_BLG\Embedded_Projects\embedded-learning\USART_TX_01.X\main.c
+[v _USART_Init USART_Init `(v  1 e 1 0 ]
+"35
+[v _main main `(v  1 e 1 0 ]
+[s S177 . 1 `uc 1 TMR1IF 1 0 :1:0 
+`uc 1 TMR2IF 1 0 :1:1 
+`uc 1 CCP1IF 1 0 :1:2 
+`uc 1 SSPIF 1 0 :1:3 
+`uc 1 TXIF 1 0 :1:4 
+`uc 1 RCIF 1 0 :1:5 
+`uc 1 ADIF 1 0 :1:6 
+`uc 1 TMR1GIF 1 0 :1:7 
+]
+"651 C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h
+[u S186 . 1 `S177 1 . 1 0 ]
+[v _PIR1bits PIR1bits `VES186  1 e 1 @17 ]
+[s S44 . 1 `uc 1 TRISA0 1 0 :1:0 
+`uc 1 TRISA1 1 0 :1:1 
+`uc 1 TRISA2 1 0 :1:2 
+`uc 1 TRISA3 1 0 :1:3 
+`uc 1 TRISA4 1 0 :1:4 
+`uc 1 TRISA5 1 0 :1:5 
+`uc 1 TRISA6 1 0 :1:6 
+`uc 1 TRISA7 1 0 :1:7 
+]
+"1243
+[u S53 . 1 `S44 1 . 1 0 ]
+[v _TRISAbits TRISAbits `VES53  1 e 1 @140 ]
+[s S23 . 1 `uc 1 TRISC0 1 0 :1:0 
+`uc 1 TRISC1 1 0 :1:1 
+`uc 1 TRISC2 1 0 :1:2 
+`uc 1 TRISC3 1 0 :1:3 
+`uc 1 TRISC4 1 0 :1:4 
+`uc 1 TRISC5 1 0 :1:5 
+`uc 1 TRISC6 1 0 :1:6 
+`uc 1 TRISC7 1 0 :1:7 
+]
+"1367
+[u S32 . 1 `S23 1 . 1 0 ]
+[v _TRISCbits TRISCbits `VES32  1 e 1 @142 ]
+"1849
+[v _OSCCON OSCCON `VEuc  1 e 1 @153 ]
+[s S151 . 1 `uc 1 LATA0 1 0 :1:0 
+`uc 1 LATA1 1 0 :1:1 
+`uc 1 LATA2 1 0 :1:2 
+`uc 1 LATA3 1 0 :1:3 
+`uc 1 LATA4 1 0 :1:4 
+`uc 1 LATA5 1 0 :1:5 
+`uc 1 LATA6 1 0 :1:6 
+`uc 1 LATA7 1 0 :1:7 
+]
+"2208
+[u S160 . 1 `S151 1 . 1 0 ]
+[v _LATAbits LATAbits `VES160  1 e 1 @268 ]
+[s S65 . 1 `uc 1 ANSA0 1 0 :1:0 
+`uc 1 ANSA1 1 0 :1:1 
+`uc 1 ANSA2 1 0 :1:2 
+`uc 1 ANSA3 1 0 :1:3 
+`uc 1 ANSA4 1 0 :1:4 
+`uc 1 ANSA5 1 0 :1:5 
+]
+"3093
+[s S72 . 1 `uc 1 ANSELA 1 0 :6:0 
+]
+[u S74 . 1 `S65 1 . 1 0 `S72 1 . 1 0 ]
+[v _ANSELAbits ANSELAbits `VES74  1 e 1 @396 ]
+"3405
+[v _TXREG TXREG `VEuc  1 e 1 @410 ]
+"3437
+[v _SPBRG SPBRG `VEuc  1 e 1 @411 ]
+[s S130 . 1 `uc 1 RX9D 1 0 :1:0 
+`uc 1 OERR 1 0 :1:1 
+`uc 1 FERR 1 0 :1:2 
+`uc 1 ADDEN 1 0 :1:3 
+`uc 1 CREN 1 0 :1:4 
+`uc 1 SREN 1 0 :1:5 
+`uc 1 RX9 1 0 :1:6 
+`uc 1 SPEN 1 0 :1:7 
+]
+"3541
+[u S139 . 1 `S130 1 . 1 0 ]
+[v _RCSTAbits RCSTAbits `VES139  1 e 1 @413 ]
+[s S87 . 1 `uc 1 TX9D 1 0 :1:0 
+`uc 1 TRMT 1 0 :1:1 
+`uc 1 BRGH 1 0 :1:2 
+`uc 1 SENDB 1 0 :1:3 
+`uc 1 SYNC 1 0 :1:4 
+`uc 1 TXEN 1 0 :1:5 
+`uc 1 TX9 1 0 :1:6 
+`uc 1 CSRC 1 0 :1:7 
+]
+"3603
+[u S96 . 1 `S87 1 . 1 0 ]
+[v _TXSTAbits TXSTAbits `VES96  1 e 1 @414 ]
+[s S108 . 1 `uc 1 ABDEN 1 0 :1:0 
+`uc 1 WUE 1 0 :1:1 
+`uc 1 . 1 0 :1:2 
+`uc 1 BRG16 1 0 :1:3 
+`uc 1 SCKP 1 0 :1:4 
+`uc 1 . 1 0 :1:5 
+`uc 1 RCIDL 1 0 :1:6 
+`uc 1 ABDOVF 1 0 :1:7 
+]
+"3665
+[u S117 . 1 `S108 1 . 1 0 ]
+[v _BAUDCONbits BAUDCONbits `VES117  1 e 1 @415 ]
+"35 C:\Users\moona\Documents\Ryota_BLG\Embedded_Projects\embedded-learning\USART_TX_01.X\main.c
+[v _main main `(v  1 e 1 0 ]
+{
+"44
+[v main@i i `uc  1 a 1 12 ]
+"41
+[v main@Strings Strings `[10]uc  1 a 10 0 ]
+"42
+[v main@len len `ui  1 a 2 10 ]
+"39
+[v main@F3282 F3282 `[10]uc  1 s 10 F3282 ]
+"51
+} 0
+"5 C:\Program Files\Microchip\xc8\v3.10\pic\sources\c99\common\strlen.c
+[v _strlen strlen `(ui  1 e 2 0 ]
+{
+"7
+[v strlen@a a `*.4DCuc  1 a 1 2 ]
+"5
+[v strlen@s s `*.4DCuc  1 p 1 0 ]
+"12
+} 0
+"19 C:\Users\moona\Documents\Ryota_BLG\Embedded_Projects\embedded-learning\USART_TX_01.X\main.c
+[v _USART_Init USART_Init `(v  1 e 1 0 ]
+{
+"33
+} 0
