@@ -1,0 +1,76 @@
+[p GLOBOPT AUTOSTATIC IEEE_DBL IEEE_FLT PIC14 PIC14E ]
+[d version 1.1 ]
+[d edition pro ]
+[d chip 16F1938 ]
+[d frameptr 6 ]
+"10 C:\Program Files\Microchip\xc8\v3.10\pic\sources\c99\common\sprcadd.c
+[v ___fladd __fladd `(d  1 e 4 0 ]
+"4 C:\Program Files\Microchip\xc8\v3.10\pic\sources\c99\common\Umul8_16.c
+[v __Umul8_16 _Umul8_16 `(ui  1 e 2 0 ]
+"6 C:\Program Files\Microchip\xc8\v3.10\pic\sources\c99\pic\__eeprom.c
+[v ___eecpymem __eecpymem `(v  1 e 1 0 ]
+"39
+[v ___memcpyee __memcpyee `(v  1 e 1 0 ]
+"21 C:\Users\os_r_\Documents\Ryota_BLG\Embedded_Projects\embedded-learning\RS485.X\main_rs485_abt.c
+[v _Pin_Init Pin_Init `(v  1 e 1 0 ]
+"34
+[v _isr isr `II(v  1 e 1 0 ]
+"39
+[v _main main `(v  1 e 1 0 ]
+[s S24 . 1 `uc 1 TRISA0 1 0 :1:0 
+`uc 1 TRISA1 1 0 :1:1 
+`uc 1 TRISA2 1 0 :1:2 
+`uc 1 TRISA3 1 0 :1:3 
+`uc 1 TRISA4 1 0 :1:4 
+`uc 1 TRISA5 1 0 :1:5 
+`uc 1 TRISA6 1 0 :1:6 
+`uc 1 TRISA7 1 0 :1:7 
+]
+"1243 C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h
+[u S33 . 1 `S24 1 . 1 0 ]
+[v _TRISAbits TRISAbits `VES33  1 e 1 @140 ]
+[s S66 . 1 `uc 1 TRISC0 1 0 :1:0 
+`uc 1 TRISC1 1 0 :1:1 
+`uc 1 TRISC2 1 0 :1:2 
+`uc 1 TRISC3 1 0 :1:3 
+`uc 1 TRISC4 1 0 :1:4 
+`uc 1 TRISC5 1 0 :1:5 
+`uc 1 TRISC6 1 0 :1:6 
+`uc 1 TRISC7 1 0 :1:7 
+]
+"1367
+[u S75 . 1 `S66 1 . 1 0 ]
+[v _TRISCbits TRISCbits `VES75  1 e 1 @142 ]
+"1849
+[v _OSCCON OSCCON `VEuc  1 e 1 @153 ]
+[s S45 . 1 `uc 1 LATA0 1 0 :1:0 
+`uc 1 LATA1 1 0 :1:1 
+`uc 1 LATA2 1 0 :1:2 
+`uc 1 LATA3 1 0 :1:3 
+`uc 1 LATA4 1 0 :1:4 
+`uc 1 LATA5 1 0 :1:5 
+`uc 1 LATA6 1 0 :1:6 
+`uc 1 LATA7 1 0 :1:7 
+]
+"2208
+[u S54 . 1 `S45 1 . 1 0 ]
+[v _LATAbits LATAbits `VES54  1 e 1 @268 ]
+"3075
+[v _ANSELA ANSELA `VEuc  1 e 1 @396 ]
+"3133
+[v _ANSELB ANSELB `VEuc  1 e 1 @397 ]
+"39 C:\Users\os_r_\Documents\Ryota_BLG\Embedded_Projects\embedded-learning\RS485.X\main_rs485_abt.c
+[v _main main `(v  1 e 1 0 ]
+{
+"49
+} 0
+"21
+[v _Pin_Init Pin_Init `(v  1 e 1 0 ]
+{
+"32
+} 0
+"34
+[v _isr isr `II(v  1 e 1 0 ]
+{
+"37
+} 0
