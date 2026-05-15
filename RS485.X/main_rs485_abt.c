@@ -86,9 +86,6 @@ void main(void) {
             }
         }
 
-        if (data == 'A') {
-            LATAbits.LATA1 = !LATAbits.LATA1;
-        }
     }
 
 #endif
