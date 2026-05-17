@@ -5216,12 +5216,14 @@ char *tempnam(const char *, const char *);
 
 
 
-void Pin_Init(void)
-{
+
+void Pin_Init(void) {
     ANSELA = 0x00;
     ANSELB = 0x00;
 
+    TRISAbits.TRISA2 = 0;
     TRISAbits.TRISA1 = 0;
+    LATAbits.LATA2 = 0;
     LATAbits.LATA1 = 0;
 
     TRISCbits.TRISC6 = 1;
@@ -5229,19 +5231,48 @@ void Pin_Init(void)
 
 }
 
-void __attribute__((picinterrupt(("")))) isr(void)
-{
+void USART_Init(void) {
+    TXSTAbits.SYNC = 0;
+    TXSTAbits.BRGH = 1;
+    BAUDCONbits.BRG16 = 1;
+
+    SPBRG = 207;
+    SPBRGH = 0;
+
+    RCSTAbits.SPEN = 1;
+    TXSTAbits.TXEN = 1;
+
+    RCSTAbits.CREN = 1;
+}
+
+void RS485_TransmitMode(void) {
+    LATAbits.LATA2 = 1;
+}
+
+void RS485_ReceiveMode(void) {
+    LATAbits.LATA2 = 0;
+}
+
+void __attribute__((picinterrupt(("")))) isr(void) {
 
 }
 
-void main(void)
-{
+void main(void) {
     OSCCON = 0b01110010;
     Pin_Init();
+    USART_Init();
+# 79 "main_rs485_abt.c"
+    RS485_ReceiveMode();
+    while (1) {
+        if (PIR1bits.RCIF) {
+            char data = RCREG;
 
-    LATAbits.LATA1 = 1;
-    _delay((unsigned long)((500)*(8000000UL/4000.0)));
+            if (data == 'A') {
+                LATAbits.LATA1 = !LATAbits.LATA1;
+            }
+        }
 
-    LATAbits.LATA1 = 0;
-    _delay((unsigned long)((500)*(8000000UL/4000.0)));
+    }
+
+
 }

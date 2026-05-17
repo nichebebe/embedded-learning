@@ -38,16 +38,65 @@ Version 4.0 HI-TECH Software Intermediate Code
 "1367
 [; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 1367: extern volatile TRISCbits_t TRISCbits __attribute__((address(0x08E)));
 [v _TRISCbits `VS76 ~T0 @X0 0 e@142 ]
+"3592
+[; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 3592:     struct {
+[s S189 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S189 . TX9D TRMT BRGH SENDB SYNC TXEN TX9 CSRC ]
+"3591
+[; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 3591: typedef union {
+[u S188 `S189 1 ]
+[n S188 . . ]
+"3603
+[; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 3603: extern volatile TXSTAbits_t TXSTAbits __attribute__((address(0x19E)));
+[v _TXSTAbits `VS188 ~T0 @X0 0 e@414 ]
+"3654
+[; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 3654:     struct {
+[s S191 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S191 . ABDEN WUE . BRG16 SCKP . RCIDL ABDOVF ]
+"3653
+[; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 3653: typedef union {
+[u S190 `S191 1 ]
+[n S190 . . ]
+"3665
+[; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 3665: extern volatile BAUDCONbits_t BAUDCONbits __attribute__((address(0x19F)));
+[v _BAUDCONbits `VS190 ~T0 @X0 0 e@415 ]
+"3437
+[; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 3437: extern volatile unsigned char SPBRG __attribute__((address(0x19B)));
+[v _SPBRG `Vuc ~T0 @X0 0 e@411 ]
+"3491
+[; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 3491: extern volatile unsigned char SPBRGH __attribute__((address(0x19C)));
+[v _SPBRGH `Vuc ~T0 @X0 0 e@412 ]
+"3530
+[; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 3530:     struct {
+[s S187 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S187 . RX9D OERR FERR ADDEN CREN SREN RX9 SPEN ]
+"3529
+[; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 3529: typedef union {
+[u S186 `S187 1 ]
+[n S186 . . ]
+"3541
+[; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 3541: extern volatile RCSTAbits_t RCSTAbits __attribute__((address(0x19D)));
+[v _RCSTAbits `VS186 ~T0 @X0 0 e@413 ]
 [t ~ __interrupt . k ]
 [t T1 __interrupt ]
 [p mainexit ]
 "1849
 [; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 1849: extern volatile unsigned char OSCCON __attribute__((address(0x099)));
 [v _OSCCON `Vuc ~T0 @X0 0 e@153 ]
-[v F202 `(v ~T0 @X0 1 tf1`ul ]
-"20 C:\Program Files\Microchip\xc8\v3.10\pic\include/builtins.h
-[v __delay `JF202 ~T0 @X0 0 e ]
-[p i __delay ]
+"640
+[; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 640:     struct {
+[s S42 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S42 . TMR1IF TMR2IF CCP1IF SSPIF TXIF RCIF ADIF TMR1GIF ]
+"639
+[; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 639: typedef union {
+[u S41 `S42 1 ]
+[n S41 . . ]
+"651
+[; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 651: extern volatile PIR1bits_t PIR1bits __attribute__((address(0x011)));
+[v _PIR1bits `VS41 ~T0 @X0 0 e@17 ]
+"3385
+[; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 3385: extern volatile unsigned char RCREG __attribute__((address(0x199)));
+[v _RCREG `Vuc ~T0 @X0 0 e@409 ]
 "52 C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h
 [; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 52: __asm("INDF0 equ 00h");
 [; <" INDF0 equ 00h ;# ">
@@ -553,85 +602,172 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;main_rs485_abt.c: 8: 
 [p x PWRTE  =  OFF ]
 "9
-[; ;main_rs485_abt.c: 9:     TRISAbits.TRISA1 = 0;
+[; ;main_rs485_abt.c: 9:     TRISAbits.TRISA2 = 0;
 [p x CP  =  OFF ]
 "10
-[; ;main_rs485_abt.c: 10:     LATAbits.LATA1 = 0;
+[; ;main_rs485_abt.c: 10:     TRISAbits.TRISA1 = 0;
 [p x MCLRE  =  OFF ]
 "11
-[; ;main_rs485_abt.c: 11: 
+[; ;main_rs485_abt.c: 11:     LATAbits.LATA2 = 0;
 [p x BOREN  =  ON ]
 "12
-[; ;main_rs485_abt.c: 12:     TRISCbits.TRISC6 = 1;
+[; ;main_rs485_abt.c: 12:     LATAbits.LATA1 = 0;
 [p x CLKOUTEN  =  OFF ]
 "13
-[; ;main_rs485_abt.c: 13:     TRISCbits.TRISC7 = 1;
+[; ;main_rs485_abt.c: 13: 
 [p x IESO  =  OFF ]
 "14
-[; ;main_rs485_abt.c: 14: 
+[; ;main_rs485_abt.c: 14:     TRISCbits.TRISC6 = 1;
 [p x FCMEN  =  OFF ]
 "15
-[; ;main_rs485_abt.c: 15: }
+[; ;main_rs485_abt.c: 15:     TRISCbits.TRISC7 = 1;
 [p x LVP  =  OFF ]
-"21
-[; ;main_rs485_abt.c: 21: 
-[v _Pin_Init `(v ~T0 @X0 1 ef ]
 "22
-[; ;main_rs485_abt.c: 22: void main(void)
+[; ;main_rs485_abt.c: 22:     BAUDCONbits.BRG16 = 1;
+[v _Pin_Init `(v ~T0 @X0 1 ef ]
 {
 [e :U _Pin_Init ]
 [f ]
 "23
-[; ;main_rs485_abt.c: 23: {
+[; ;main_rs485_abt.c: 23: 
 [e = _ANSELA -> -> 0 `i `uc ]
 "24
-[; ;main_rs485_abt.c: 24:     OSCCON = 0b01110010;
+[; ;main_rs485_abt.c: 24:     SPBRG = 207;
 [e = _ANSELB -> -> 0 `i `uc ]
 "26
 [; ;main_rs485_abt.c: 26: 
-[e = . . _TRISAbits 0 1 -> -> 0 `i `uc ]
+[e = . . _TRISAbits 0 2 -> -> 0 `i `uc ]
 "27
-[; ;main_rs485_abt.c: 27:     LATAbits.LATA1 = 1;
-[e = . . _LATAbits 0 1 -> -> 0 `i `uc ]
+[; ;main_rs485_abt.c: 27:     RCSTAbits.SPEN = 1;
+[e = . . _TRISAbits 0 1 -> -> 0 `i `uc ]
+"28
+[; ;main_rs485_abt.c: 28:     TXSTAbits.TXEN = 1;
+[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
 "29
 [; ;main_rs485_abt.c: 29: 
+[e = . . _LATAbits 0 1 -> -> 0 `i `uc ]
+"31
+[; ;main_rs485_abt.c: 31: }
 [e = . . _TRISCbits 0 6 -> -> 1 `i `uc ]
-"30
-[; ;main_rs485_abt.c: 30:     LATAbits.LATA1 = 0;
-[e = . . _TRISCbits 0 7 -> -> 1 `i `uc ]
 "32
-[; ;main_rs485_abt.c: 32: }
+[; ;main_rs485_abt.c: 32: 
+[e = . . _TRISCbits 0 7 -> -> 1 `i `uc ]
+"34
+[; ;main_rs485_abt.c: 34:     LATAbits.LATA2 = 1;
 [e :UE 371 ]
 }
+"36
+[; ;main_rs485_abt.c: 36: 
+[v _USART_Init `(v ~T0 @X0 1 ef ]
+{
+[e :U _USART_Init ]
+[f ]
+"37
+[; ;main_rs485_abt.c: 37: void RS485_ReceiveMode(void) {
+[e = . . _TXSTAbits 0 4 -> -> 0 `i `uc ]
+"38
+[; ;main_rs485_abt.c: 38:     LATAbits.LATA2 = 0;
+[e = . . _TXSTAbits 0 2 -> -> 1 `i `uc ]
+"39
+[; ;main_rs485_abt.c: 39: }
+[e = . . _BAUDCONbits 0 3 -> -> 1 `i `uc ]
+"41
+[; ;main_rs485_abt.c: 41: void __attribute__((picinterrupt(("")))) isr(void) {
+[e = _SPBRG -> -> 207 `i `uc ]
+"42
+[; ;main_rs485_abt.c: 42: 
+[e = _SPBRGH -> -> 0 `i `uc ]
+"44
+[; ;main_rs485_abt.c: 44: 
+[e = . . _RCSTAbits 0 7 -> -> 1 `i `uc ]
+"45
+[; ;main_rs485_abt.c: 45: void main(void) {
+[e = . . _TXSTAbits 0 5 -> -> 1 `i `uc ]
+"47
+[; ;main_rs485_abt.c: 47:     Pin_Init();
+[e = . . _RCSTAbits 0 4 -> -> 1 `i `uc ]
+"48
+[; ;main_rs485_abt.c: 48:     USART_Init();
+[e :UE 372 ]
+}
+"50
+[v _RS485_TransmitMode `(v ~T0 @X0 1 ef ]
+{
+[e :U _RS485_TransmitMode ]
+[f ]
+"51
+[e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
+"52
+[e :UE 373 ]
+}
+"54
+[v _RS485_ReceiveMode `(v ~T0 @X0 1 ef ]
+{
+[e :U _RS485_ReceiveMode ]
+[f ]
+"55
+[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
+"56
+[e :UE 374 ]
+}
 [v $root$_isr `(v ~T0 @X0 0 e ]
-"34
+"58
 [v _isr `(v ~T1 @X0 1 ef ]
-"35
 {
 [e :U _isr ]
 [f ]
-"37
-[e :UE 372 ]
+"60
+[e :UE 375 ]
 }
 [v $root$_main `(v ~T0 @X0 0 e ]
-"39
+"62
 [v _main `(v ~T0 @X0 1 ef ]
-"40
 {
 [e :U _main ]
 [f ]
-"41
+"63
 [e = _OSCCON -> -> 114 `i `uc ]
-"42
+"64
 [e ( _Pin_Init ..  ]
-"44
-[e = . . _LATAbits 0 1 -> -> 1 `i `uc ]
-"45
-[e ( __delay (1 -> * -> -> 500 `i `d / -> -> 8000000 `ul `d .4000.0 `ul ]
-"47
-[e = . . _LATAbits 0 1 -> -> 0 `i `uc ]
-"48
-[e ( __delay (1 -> * -> -> 500 `i `d / -> -> 8000000 `ul `d .4000.0 `ul ]
-"49
-[e :UE 373 ]
+"65
+[e ( _USART_Init ..  ]
+"79
+[; ;main_rs485_abt.c: 79:     RS485_ReceiveMode();
+[e ( _RS485_ReceiveMode ..  ]
+"80
+[; ;main_rs485_abt.c: 80:     while (1) {
+[e :U 378 ]
+{
+"81
+[; ;main_rs485_abt.c: 81:         if (PIR1bits.RCIF) {
+[e $ ! != -> . . _PIR1bits 0 5 `i -> 0 `i 380  ]
+{
+"82
+[; ;main_rs485_abt.c: 82:             char data = RCREG;
+[v _data `uc ~T0 @X0 1 a ]
+[e = _data -> _RCREG `uc ]
+"84
+[; ;main_rs485_abt.c: 84:             if (data == 'A') {
+[e $ ! == -> _data `ui -> 65 `ui 381  ]
+{
+"85
+[; ;main_rs485_abt.c: 85:                 LATAbits.LATA1 = !LATAbits.LATA1;
+[e = . . _LATAbits 0 1 -> -> ! != -> . . _LATAbits 0 1 `i -> 0 `i `i `uc ]
+"86
+[; ;main_rs485_abt.c: 86:             }
+}
+[e :U 381 ]
+"87
+[; ;main_rs485_abt.c: 87:         }
+}
+[e :U 380 ]
+"89
+[; ;main_rs485_abt.c: 89:     }
+}
+[e :U 377 ]
+[e $U 378  ]
+[e :U 379 ]
+"92
+[; ;main_rs485_abt.c: 92: }
+[e :UE 376 ]
 }

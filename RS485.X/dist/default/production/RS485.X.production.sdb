@@ -11,12 +11,28 @@
 [v ___eecpymem __eecpymem `(v  1 e 1 0 ]
 "39
 [v ___memcpyee __memcpyee `(v  1 e 1 0 ]
-"21 C:\Users\os_r_\Documents\Ryota_BLG\Embedded_Projects\embedded-learning\RS485.X\main_rs485_abt.c
+"22 C:\Users\moona\Documents\Ryota_BLG\Embedded_Projects\embedded-learning\RS485.X\main_rs485_abt.c
 [v _Pin_Init Pin_Init `(v  1 e 1 0 ]
-"34
+"36
+[v _USART_Init USART_Init `(v  1 e 1 0 ]
+"54
+[v _RS485_ReceiveMode RS485_ReceiveMode `(v  1 e 1 0 ]
+"58
 [v _isr isr `II(v  1 e 1 0 ]
-"39
+"62
 [v _main main `(v  1 e 1 0 ]
+[s S153 . 1 `uc 1 TMR1IF 1 0 :1:0 
+`uc 1 TMR2IF 1 0 :1:1 
+`uc 1 CCP1IF 1 0 :1:2 
+`uc 1 SSPIF 1 0 :1:3 
+`uc 1 TXIF 1 0 :1:4 
+`uc 1 RCIF 1 0 :1:5 
+`uc 1 ADIF 1 0 :1:6 
+`uc 1 TMR1GIF 1 0 :1:7 
+]
+"651 C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h
+[u S162 . 1 `S153 1 . 1 0 ]
+[v _PIR1bits PIR1bits `VES162  1 e 1 @17 ]
 [s S24 . 1 `uc 1 TRISA0 1 0 :1:0 
 `uc 1 TRISA1 1 0 :1:1 
 `uc 1 TRISA2 1 0 :1:2 
@@ -26,7 +42,7 @@
 `uc 1 TRISA6 1 0 :1:6 
 `uc 1 TRISA7 1 0 :1:7 
 ]
-"1243 C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h
+"1243
 [u S33 . 1 `S24 1 . 1 0 ]
 [v _TRISAbits TRISAbits `VES33  1 e 1 @140 ]
 [s S66 . 1 `uc 1 TRISC0 1 0 :1:0 
@@ -59,18 +75,72 @@
 [v _ANSELA ANSELA `VEuc  1 e 1 @396 ]
 "3133
 [v _ANSELB ANSELB `VEuc  1 e 1 @397 ]
-"39 C:\Users\os_r_\Documents\Ryota_BLG\Embedded_Projects\embedded-learning\RS485.X\main_rs485_abt.c
+"3385
+[v _RCREG RCREG `VEuc  1 e 1 @409 ]
+"3437
+[v _SPBRG SPBRG `VEuc  1 e 1 @411 ]
+"3491
+[v _SPBRGH SPBRGH `VEuc  1 e 1 @412 ]
+[s S131 . 1 `uc 1 RX9D 1 0 :1:0 
+`uc 1 OERR 1 0 :1:1 
+`uc 1 FERR 1 0 :1:2 
+`uc 1 ADDEN 1 0 :1:3 
+`uc 1 CREN 1 0 :1:4 
+`uc 1 SREN 1 0 :1:5 
+`uc 1 RX9 1 0 :1:6 
+`uc 1 SPEN 1 0 :1:7 
+]
+"3541
+[u S140 . 1 `S131 1 . 1 0 ]
+[v _RCSTAbits RCSTAbits `VES140  1 e 1 @413 ]
+[s S87 . 1 `uc 1 TX9D 1 0 :1:0 
+`uc 1 TRMT 1 0 :1:1 
+`uc 1 BRGH 1 0 :1:2 
+`uc 1 SENDB 1 0 :1:3 
+`uc 1 SYNC 1 0 :1:4 
+`uc 1 TXEN 1 0 :1:5 
+`uc 1 TX9 1 0 :1:6 
+`uc 1 CSRC 1 0 :1:7 
+]
+"3603
+[u S96 . 1 `S87 1 . 1 0 ]
+[v _TXSTAbits TXSTAbits `VES96  1 e 1 @414 ]
+[s S108 . 1 `uc 1 ABDEN 1 0 :1:0 
+`uc 1 WUE 1 0 :1:1 
+`uc 1 . 1 0 :1:2 
+`uc 1 BRG16 1 0 :1:3 
+`uc 1 SCKP 1 0 :1:4 
+`uc 1 . 1 0 :1:5 
+`uc 1 RCIDL 1 0 :1:6 
+`uc 1 ABDOVF 1 0 :1:7 
+]
+"3665
+[u S117 . 1 `S108 1 . 1 0 ]
+[v _BAUDCONbits BAUDCONbits `VES117  1 e 1 @415 ]
+"62 C:\Users\moona\Documents\Ryota_BLG\Embedded_Projects\embedded-learning\RS485.X\main_rs485_abt.c
 [v _main main `(v  1 e 1 0 ]
 {
-"49
+"82
+[v main@data data `uc  1 a 1 0 ]
+"92
 } 0
-"21
+"36
+[v _USART_Init USART_Init `(v  1 e 1 0 ]
+{
+"48
+} 0
+"54
+[v _RS485_ReceiveMode RS485_ReceiveMode `(v  1 e 1 0 ]
+{
+"56
+} 0
+"22
 [v _Pin_Init Pin_Init `(v  1 e 1 0 ]
 {
-"32
-} 0
 "34
+} 0
+"58
 [v _isr isr `II(v  1 e 1 0 ]
 {
-"37
+"60
 } 0

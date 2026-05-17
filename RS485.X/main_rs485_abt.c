@@ -17,7 +17,7 @@
 #define _XTAL_FREQ 8000000UL
 
 #define RS485_EN_LAT LATAbits.LATA2
-#define NODE_TRANSMITTER 1
+#define NODE_TRANSMITTER 0
 
 void Pin_Init(void) {
     ANSELA = 0x00;
