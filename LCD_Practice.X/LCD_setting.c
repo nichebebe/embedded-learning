@@ -28,7 +28,7 @@ void I2C_Init(void)
     SSPSTATbits.SMP = 1;   //I2C nomal mode
     SSPSTATbits.CKE = 0;   //SMBus input disabled
     
-    SSPCON1bits.SSPM = 1000;
+    SSPCON1bits.SSPM = 0b1000;
     SSPADD = 19;
     
     SSPCON1bits.SSPEN = 1;
@@ -93,7 +93,7 @@ void LCD_Init(void) {
     __delay_ms(30);
     write_Command(0x73);
     __delay_ms(30);
-    write_Command(0x56);
+    write_Command(0x5C);
     __delay_ms(30);
     write_Command(0x6C);
     __delay_ms(250);
@@ -108,6 +108,7 @@ void LCD_Init(void) {
 
 void main(void)
 {
+    OSCCON = 0b01110010;
     I2C_Init();
     LCD_Init();
     
@@ -116,6 +117,11 @@ void main(void)
         write_Data(str[i]);
     }
     write_Command(0xC0); //2?????
+    write_Data('W');
+    write_Data('o');
+    write_Data('r');
+    write_Data('l');
+    write_Data('d');
     
     while(1)
     {
