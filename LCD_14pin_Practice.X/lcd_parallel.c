@@ -13,7 +13,8 @@
 
 #define _XTAL_FREQ 8000000UL
 
-unsigned char str[] = "Hello"
+unsigned char str1[] = "Hello";
+unsigned char str2[] = "World";
 
 void pin_init(void)
 {
@@ -66,8 +67,16 @@ void main(void)
 {
     pin_init();
     lcd_init();
-    for(unsigned char i = 0; str[i] < '\0'; i++)
+    
+    lcd_cmd(0x80);
+    for(unsigned char i = 0; str1[i] != '\0'; i++)
     {
-        lcd_data(str[i]);
+        lcd_data(str1[i]);
+    }
+    
+    lcd_cmd(0xC0);
+    for(unsigned char i = 0; str2[i] != '\0'; i++)
+    {
+        lcd_data(str2[i]);
     }
 }
