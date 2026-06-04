@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <executable name="dist/default/production\LCD_4bit_Practice.X.production.hex">
+  <executable name="dist/default/production\LCD_4bit_busy_flag.X.production.hex">
     <memory name="program">
       <units>words</units>
       <length>16384</length>
-      <used>232</used>
-      <free>16152</free>
+      <used>291</used>
+      <free>16093</free>
     </memory>
     <memory name="data">
       <units>bytes</units>
