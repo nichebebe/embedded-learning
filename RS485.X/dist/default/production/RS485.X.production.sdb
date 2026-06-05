@@ -11,12 +11,12 @@
 [v ___eecpymem __eecpymem `(v  1 e 1 0 ]
 "39
 [v ___memcpyee __memcpyee `(v  1 e 1 0 ]
-"22 C:\Users\moona\Documents\Ryota_BLG\Embedded_Projects\embedded-learning\RS485.X\main_rs485_abt.c
+"22 C:\Users\os_r_\Documents\Ryota_BLG\Embedded_Projects\embedded-learning\RS485.X\main_rs485_abt.c
 [v _Pin_Init Pin_Init `(v  1 e 1 0 ]
 "36
 [v _USART_Init USART_Init `(v  1 e 1 0 ]
-"54
-[v _RS485_ReceiveMode RS485_ReceiveMode `(v  1 e 1 0 ]
+"50
+[v _RS485_TransmitMode RS485_TransmitMode `(v  1 e 1 0 ]
 "58
 [v _isr isr `II(v  1 e 1 0 ]
 "62
@@ -75,8 +75,8 @@
 [v _ANSELA ANSELA `VEuc  1 e 1 @396 ]
 "3133
 [v _ANSELB ANSELB `VEuc  1 e 1 @397 ]
-"3385
-[v _RCREG RCREG `VEuc  1 e 1 @409 ]
+"3405
+[v _TXREG TXREG `VEuc  1 e 1 @410 ]
 "3437
 [v _SPBRG SPBRG `VEuc  1 e 1 @411 ]
 "3491
@@ -117,11 +117,9 @@
 "3665
 [u S117 . 1 `S108 1 . 1 0 ]
 [v _BAUDCONbits BAUDCONbits `VES117  1 e 1 @415 ]
-"62 C:\Users\moona\Documents\Ryota_BLG\Embedded_Projects\embedded-learning\RS485.X\main_rs485_abt.c
+"62 C:\Users\os_r_\Documents\Ryota_BLG\Embedded_Projects\embedded-learning\RS485.X\main_rs485_abt.c
 [v _main main `(v  1 e 1 0 ]
 {
-"82
-[v main@data data `uc  1 a 1 0 ]
 "92
 } 0
 "36
@@ -129,10 +127,10 @@
 {
 "48
 } 0
-"54
-[v _RS485_ReceiveMode RS485_ReceiveMode `(v  1 e 1 0 ]
+"50
+[v _RS485_TransmitMode RS485_TransmitMode `(v  1 e 1 0 ]
 {
-"56
+"52
 } 0
 "22
 [v _Pin_Init Pin_Init `(v  1 e 1 0 ]

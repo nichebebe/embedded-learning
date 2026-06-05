@@ -5261,18 +5261,16 @@ void main(void) {
     OSCCON = 0b01110010;
     Pin_Init();
     USART_Init();
-# 79 "main_rs485_abt.c"
-    RS485_ReceiveMode();
+
+
+
+    RS485_TransmitMode();
+
     while (1) {
-        if (PIR1bits.RCIF) {
-            char data = RCREG;
-
-            if (data == 'A') {
-                LATAbits.LATA1 = !LATAbits.LATA1;
-            }
-        }
-
+        while (!PIR1bits.TXIF);
+        TXREG = 'A';
+        while (!TXSTAbits.TRMT);
+        _delay((unsigned long)((1000)*(8000000UL/4000.0)));
     }
-
-
+# 92 "main_rs485_abt.c"
 }

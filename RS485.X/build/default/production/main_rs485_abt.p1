@@ -94,9 +94,13 @@ Version 4.0 HI-TECH Software Intermediate Code
 "651
 [; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 651: extern volatile PIR1bits_t PIR1bits __attribute__((address(0x011)));
 [v _PIR1bits `VS41 ~T0 @X0 0 e@17 ]
-"3385
-[; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 3385: extern volatile unsigned char RCREG __attribute__((address(0x199)));
-[v _RCREG `Vuc ~T0 @X0 0 e@409 ]
+"3405
+[; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 3405: extern volatile unsigned char TXREG __attribute__((address(0x19A)));
+[v _TXREG `Vuc ~T0 @X0 0 e@410 ]
+[v F202 `(v ~T0 @X0 1 tf1`ul ]
+"20 C:\Program Files\Microchip\xc8\v3.10\pic\include/builtins.h
+[v __delay `JF202 ~T0 @X0 0 e ]
+[p i __delay ]
 "52 C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h
 [; ;C:/Program Files/Microchip/MPLABX/v6.30/packs/Microchip/PIC12-16F1xxx_DFP/1.8.254/xc8\pic\include\proc/pic16f1938.h: 52: __asm("INDF0 equ 00h");
 [; <" INDF0 equ 00h ;# ">
@@ -691,27 +695,34 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :UE 372 ]
 }
 "50
+[; ;main_rs485_abt.c: 50: 
 [v _RS485_TransmitMode `(v ~T0 @X0 1 ef ]
 {
 [e :U _RS485_TransmitMode ]
 [f ]
 "51
+[; ;main_rs485_abt.c: 51: 
 [e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
 "52
+[; ;main_rs485_abt.c: 52:     RS485_TransmitMode();
 [e :UE 373 ]
 }
 "54
+[; ;main_rs485_abt.c: 54:     while (1) {
 [v _RS485_ReceiveMode `(v ~T0 @X0 1 ef ]
 {
 [e :U _RS485_ReceiveMode ]
 [f ]
 "55
+[; ;main_rs485_abt.c: 55:         while (!PIR1bits.TXIF);
 [e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
 "56
+[; ;main_rs485_abt.c: 56:         TXREG = 'A';
 [e :UE 374 ]
 }
 [v $root$_isr `(v ~T0 @X0 0 e ]
 "58
+[; ;main_rs485_abt.c: 58:         _delay((unsigned long)((1000)*(8000000UL/4000.0)));
 [v _isr `(v ~T1 @X0 1 ef ]
 {
 [e :U _isr ]
@@ -731,38 +742,28 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e ( _Pin_Init ..  ]
 "65
 [e ( _USART_Init ..  ]
-"79
-[; ;main_rs485_abt.c: 79:     RS485_ReceiveMode();
-[e ( _RS485_ReceiveMode ..  ]
-"80
-[; ;main_rs485_abt.c: 80:     while (1) {
+"69
+[e ( _RS485_TransmitMode ..  ]
+"71
 [e :U 378 ]
 {
-"81
-[; ;main_rs485_abt.c: 81:         if (PIR1bits.RCIF) {
-[e $ ! != -> . . _PIR1bits 0 5 `i -> 0 `i 380  ]
-{
-"82
-[; ;main_rs485_abt.c: 82:             char data = RCREG;
-[v _data `uc ~T0 @X0 1 a ]
-[e = _data -> _RCREG `uc ]
-"84
-[; ;main_rs485_abt.c: 84:             if (data == 'A') {
-[e $ ! == -> _data `ui -> 65 `ui 381  ]
-{
-"85
-[; ;main_rs485_abt.c: 85:                 LATAbits.LATA1 = !LATAbits.LATA1;
-[e = . . _LATAbits 0 1 -> -> ! != -> . . _LATAbits 0 1 `i -> 0 `i `i `uc ]
-"86
-[; ;main_rs485_abt.c: 86:             }
-}
+"72
+[e $U 380  ]
 [e :U 381 ]
-"87
-[; ;main_rs485_abt.c: 87:         }
-}
 [e :U 380 ]
-"89
-[; ;main_rs485_abt.c: 89:     }
+[e $ ! != -> . . _PIR1bits 0 4 `i -> 0 `i 381  ]
+[e :U 382 ]
+"73
+[e = _TXREG -> -> 65 `ui `uc ]
+"74
+[e $U 383  ]
+[e :U 384 ]
+[e :U 383 ]
+[e $ ! != -> . . _TXSTAbits 0 1 `i -> 0 `i 384  ]
+[e :U 385 ]
+"75
+[e ( __delay (1 -> * -> -> 1000 `i `d / -> -> 8000000 `ul `d .4000.0 `ul ]
+"76
 }
 [e :U 377 ]
 [e $U 378  ]
