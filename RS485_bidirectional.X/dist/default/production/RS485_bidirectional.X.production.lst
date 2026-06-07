@@ -1,0 +1,1125 @@
+
+
+Microchip MPLAB XC8 Assembler V3.10 build 20250813170317 
+                                                                                               Sun Jun  7 14:55:47 2026
+
+Microchip MPLAB XC8 C Compiler v3.10 (Free license) build 20250813170317 Og1 
+     1                           	processor	16F1938
+     2                           	pagewidth 120
+     3                           	opt	flic
+     4                           	psect	cinit,global,class=CODE,space=0,merge=1,delta=2
+     5                           	psect	bssCOMMON,global,class=COMMON,space=1,delta=1,noexec
+     6                           	psect	cstackCOMMON,global,class=COMMON,space=1,delta=1,noexec
+     7                           	psect	maintext,global,class=CODE,space=0,merge=1,split=1,delta=2
+     8                           	psect	text1,local,class=CODE,space=0,merge=1,delta=2
+     9                           	psect	text2,local,class=CODE,space=0,merge=1,delta=2
+    10                           	psect	text3,local,class=CODE,space=0,merge=1,delta=2
+    11                           	psect	text4,local,class=CODE,space=0,merge=1,delta=2
+    12                           	psect	config,global,abs,ovrld,class=CONFIG,space=4,delta=2,noexec
+    13                           	dabs	1,0x7E,2
+    14     0000                     
+    15                           ; Generated 27/03/2025 GMT
+    16                           ; 
+    17                           ; Copyright © 2025, Microchip Technology Inc. and its subsidiaries ("Microchip")
+    18                           ; All rights reserved.
+    19                           ; 
+    20                           ; This software is developed by Microchip Technology Inc. and its subsidiaries ("Microch
+      +                          ip").
+    21                           ; 
+    22                           ; Redistribution and use in source and binary forms, with or without modification, are
+    23                           ; permitted provided that the following conditions are met:
+    24                           ; 
+    25                           ;     1. Redistributions of source code must retain the above copyright notice, this lis
+      +                          t of
+    26                           ;        conditions and the following disclaimer.
+    27                           ; 
+    28                           ;     2. Redistributions in binary form must reproduce the above copyright notice, this 
+      +                          list
+    29                           ;        of conditions and the following disclaimer in the documentation and/or other
+    30                           ;        materials provided with the distribution. Publication is not required when
+    31                           ;        this file is used in an embedded application.
+    32                           ; 
+    33                           ;     3. Microchip's name may not be used to endorse or promote products derived from th
+      +                          is
+    34                           ;        software without specific prior written permission.
+    35                           ; 
+    36                           ; THIS SOFTWARE IS PROVIDED BY MICROCHIP "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+    37                           ; INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS F
+      +                          OR
+    38                           ; PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL MICROCHIP BE LIABLE FOR ANY DIRECT, INDIREC
+      +                          T,
+    39                           ; INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING BUT NOT LIMITED TO
+    40                           ; PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA OR PROFITS; OR BUSINESS
+    41                           ; INTERRUPTION) HOWSOEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, ST
+      +                          RICT
+    42                           ; LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE U
+      +                          SE OF
+    43                           ; THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    44                           ; 
+    45                           ; 
+    46                           ; Code-generator required, PIC16F1938 Definitions
+    47                           ; 
+    48                           ; SFR Addresses
+    49     0008                     bsr             equ	8
+    50     0005                     fsr0h           equ	5
+    51     0004                     fsr0l           equ	4
+    52     0007                     fsr1h           equ	7
+    53     0006                     fsr1l           equ	6
+    54     0000                     indf            equ	0
+    55     0000                     indf0           equ	0
+    56     0001                     indf1           equ	1
+    57     000B                     intcon          equ	11
+    58     0002                     pc              equ	2
+    59     0002                     pcl             equ	2
+    60     000A                     pclath          equ	10
+    61     0003                     status          equ	3
+    62     0009                     wreg            equ	9
+    63     0000                     INDF0           equ	0	;# 
+    64     0001                     INDF1           equ	1	;# 
+    65     0002                     PCL             equ	2	;# 
+    66     0003                     STATUS          equ	3	;# 
+    67     0004                     FSR0L           equ	4	;# 
+    68     0005                     FSR0H           equ	5	;# 
+    69     0006                     FSR1L           equ	6	;# 
+    70     0007                     FSR1H           equ	7	;# 
+    71     0008                     BSR             equ	8	;# 
+    72     0009                     WREG            equ	9	;# 
+    73     000A                     PCLATH          equ	10	;# 
+    74     000B                     INTCON          equ	11	;# 
+    75     000C                     PORTA           equ	12	;# 
+    76     000D                     PORTB           equ	13	;# 
+    77     000E                     PORTC           equ	14	;# 
+    78     0010                     PORTE           equ	16	;# 
+    79     0011                     PIR1            equ	17	;# 
+    80     0012                     PIR2            equ	18	;# 
+    81     0013                     PIR3            equ	19	;# 
+    82     0015                     TMR0            equ	21	;# 
+    83     0016                     TMR1            equ	22	;# 
+    84     0016                     TMR1L           equ	22	;# 
+    85     0017                     TMR1H           equ	23	;# 
+    86     0018                     T1CON           equ	24	;# 
+    87     0019                     T1GCON          equ	25	;# 
+    88     001A                     TMR2            equ	26	;# 
+    89     001B                     PR2             equ	27	;# 
+    90     001C                     T2CON           equ	28	;# 
+    91     001E                     CPSCON0         equ	30	;# 
+    92     001F                     CPSCON1         equ	31	;# 
+    93     008C                     TRISA           equ	140	;# 
+    94     008D                     TRISB           equ	141	;# 
+    95     008E                     TRISC           equ	142	;# 
+    96     0090                     TRISE           equ	144	;# 
+    97     0091                     PIE1            equ	145	;# 
+    98     0092                     PIE2            equ	146	;# 
+    99     0093                     PIE3            equ	147	;# 
+   100     0095                     OPTION_REG      equ	149	;# 
+   101     0096                     PCON            equ	150	;# 
+   102     0097                     WDTCON          equ	151	;# 
+   103     0098                     OSCTUNE         equ	152	;# 
+   104     0099                     OSCCON          equ	153	;# 
+   105     009A                     OSCSTAT         equ	154	;# 
+   106     009B                     ADRES           equ	155	;# 
+   107     009B                     ADRESL          equ	155	;# 
+   108     009C                     ADRESH          equ	156	;# 
+   109     009D                     ADCON0          equ	157	;# 
+   110     009E                     ADCON1          equ	158	;# 
+   111     010C                     LATA            equ	268	;# 
+   112     010D                     LATB            equ	269	;# 
+   113     010E                     LATC            equ	270	;# 
+   114     0110                     LATE            equ	272	;# 
+   115     0111                     CM1CON0         equ	273	;# 
+   116     0112                     CM1CON1         equ	274	;# 
+   117     0113                     CM2CON0         equ	275	;# 
+   118     0114                     CM2CON1         equ	276	;# 
+   119     0115                     CMOUT           equ	277	;# 
+   120     0116                     BORCON          equ	278	;# 
+   121     0117                     FVRCON          equ	279	;# 
+   122     0118                     DACCON0         equ	280	;# 
+   123     0119                     DACCON1         equ	281	;# 
+   124     011A                     SRCON0          equ	282	;# 
+   125     011B                     SRCON1          equ	283	;# 
+   126     011D                     APFCON          equ	285	;# 
+   127     018C                     ANSELA          equ	396	;# 
+   128     018D                     ANSELB          equ	397	;# 
+   129     0191                     EEADR           equ	401	;# 
+   130     0191                     EEADRL          equ	401	;# 
+   131     0192                     EEADRH          equ	402	;# 
+   132     0193                     EEDAT           equ	403	;# 
+   133     0193                     EEDATL          equ	403	;# 
+   134     0193                     EEDATA          equ	403	;# 
+   135     0194                     EEDATH          equ	404	;# 
+   136     0195                     EECON1          equ	405	;# 
+   137     0196                     EECON2          equ	406	;# 
+   138     0199                     RCREG           equ	409	;# 
+   139     019A                     TXREG           equ	410	;# 
+   140     019B                     SP1BRG          equ	411	;# 
+   141     019B                     SP1BRGL         equ	411	;# 
+   142     019B                     SPBRG           equ	411	;# 
+   143     019B                     SPBRGL          equ	411	;# 
+   144     019C                     SP1BRGH         equ	412	;# 
+   145     019C                     SPBRGH          equ	412	;# 
+   146     019D                     RCSTA           equ	413	;# 
+   147     019E                     TXSTA           equ	414	;# 
+   148     019F                     BAUDCON         equ	415	;# 
+   149     020D                     WPUB            equ	525	;# 
+   150     0210                     WPUE            equ	528	;# 
+   151     0211                     SSPBUF          equ	529	;# 
+   152     0212                     SSPADD          equ	530	;# 
+   153     0213                     SSPMSK          equ	531	;# 
+   154     0214                     SSPSTAT         equ	532	;# 
+   155     0215                     SSPCON1         equ	533	;# 
+   156     0215                     SSPCON          equ	533	;# 
+   157     0216                     SSPCON2         equ	534	;# 
+   158     0217                     SSPCON3         equ	535	;# 
+   159     0291                     CCPR1           equ	657	;# 
+   160     0291                     CCPR1L          equ	657	;# 
+   161     0292                     CCPR1H          equ	658	;# 
+   162     0293                     CCP1CON         equ	659	;# 
+   163     0294                     PWM1CON         equ	660	;# 
+   164     0295                     CCP1AS          equ	661	;# 
+   165     0295                     ECCP1AS         equ	661	;# 
+   166     0296                     PSTR1CON        equ	662	;# 
+   167     0298                     CCPR2           equ	664	;# 
+   168     0298                     CCPR2L          equ	664	;# 
+   169     0299                     CCPR2H          equ	665	;# 
+   170     029A                     CCP2CON         equ	666	;# 
+   171     029B                     PWM2CON         equ	667	;# 
+   172     029C                     CCP2AS          equ	668	;# 
+   173     029C                     ECCP2AS         equ	668	;# 
+   174     029D                     PSTR2CON        equ	669	;# 
+   175     029E                     CCPTMRS0        equ	670	;# 
+   176     029F                     CCPTMRS1        equ	671	;# 
+   177     0311                     CCPR3           equ	785	;# 
+   178     0311                     CCPR3L          equ	785	;# 
+   179     0312                     CCPR3H          equ	786	;# 
+   180     0313                     CCP3CON         equ	787	;# 
+   181     0314                     PWM3CON         equ	788	;# 
+   182     0315                     CCP3AS          equ	789	;# 
+   183     0315                     ECCP3AS         equ	789	;# 
+   184     0316                     PSTR3CON        equ	790	;# 
+   185     0318                     CCPR4           equ	792	;# 
+   186     0318                     CCPR4L          equ	792	;# 
+   187     0319                     CCPR4H          equ	793	;# 
+   188     031A                     CCP4CON         equ	794	;# 
+   189     031C                     CCPR5           equ	796	;# 
+   190     031C                     CCPR5L          equ	796	;# 
+   191     031D                     CCPR5H          equ	797	;# 
+   192     031E                     CCP5CON         equ	798	;# 
+   193     0394                     IOCBP           equ	916	;# 
+   194     0395                     IOCBN           equ	917	;# 
+   195     0396                     IOCBF           equ	918	;# 
+   196     0415                     TMR4            equ	1045	;# 
+   197     0416                     PR4             equ	1046	;# 
+   198     0417                     T4CON           equ	1047	;# 
+   199     041C                     TMR6            equ	1052	;# 
+   200     041D                     PR6             equ	1053	;# 
+   201     041E                     T6CON           equ	1054	;# 
+   202     0791                     LCDCON          equ	1937	;# 
+   203     0792                     LCDPS           equ	1938	;# 
+   204     0793                     LCDREF          equ	1939	;# 
+   205     0794                     LCDCST          equ	1940	;# 
+   206     0795                     LCDRL           equ	1941	;# 
+   207     0798                     LCDSE0          equ	1944	;# 
+   208     0799                     LCDSE1          equ	1945	;# 
+   209     07A0                     LCDDATA0        equ	1952	;# 
+   210     07A1                     LCDDATA1        equ	1953	;# 
+   211     07A3                     LCDDATA3        equ	1955	;# 
+   212     07A4                     LCDDATA4        equ	1956	;# 
+   213     07A6                     LCDDATA6        equ	1958	;# 
+   214     07A7                     LCDDATA7        equ	1959	;# 
+   215     07A9                     LCDDATA9        equ	1961	;# 
+   216     07AA                     LCDDATA10       equ	1962	;# 
+   217     0FE4                     STATUS_SHAD     equ	4068	;# 
+   218     0FE5                     WREG_SHAD       equ	4069	;# 
+   219     0FE6                     BSR_SHAD        equ	4070	;# 
+   220     0FE7                     PCLATH_SHAD     equ	4071	;# 
+   221     0FE8                     FSR0L_SHAD      equ	4072	;# 
+   222     0FE9                     FSR0H_SHAD      equ	4073	;# 
+   223     0FEA                     FSR1L_SHAD      equ	4074	;# 
+   224     0FEB                     FSR1H_SHAD      equ	4075	;# 
+   225     0FED                     STKPTR          equ	4077	;# 
+   226     0FEE                     TOSL            equ	4078	;# 
+   227     0FEF                     TOSH            equ	4079	;# 
+   228     0000                     INDF0           equ	0	;# 
+   229     0001                     INDF1           equ	1	;# 
+   230     0002                     PCL             equ	2	;# 
+   231     0003                     STATUS          equ	3	;# 
+   232     0004                     FSR0L           equ	4	;# 
+   233     0005                     FSR0H           equ	5	;# 
+   234     0006                     FSR1L           equ	6	;# 
+   235     0007                     FSR1H           equ	7	;# 
+   236     0008                     BSR             equ	8	;# 
+   237     0009                     WREG            equ	9	;# 
+   238     000A                     PCLATH          equ	10	;# 
+   239     000B                     INTCON          equ	11	;# 
+   240     000C                     PORTA           equ	12	;# 
+   241     000D                     PORTB           equ	13	;# 
+   242     000E                     PORTC           equ	14	;# 
+   243     0010                     PORTE           equ	16	;# 
+   244     0011                     PIR1            equ	17	;# 
+   245     0012                     PIR2            equ	18	;# 
+   246     0013                     PIR3            equ	19	;# 
+   247     0015                     TMR0            equ	21	;# 
+   248     0016                     TMR1            equ	22	;# 
+   249     0016                     TMR1L           equ	22	;# 
+   250     0017                     TMR1H           equ	23	;# 
+   251     0018                     T1CON           equ	24	;# 
+   252     0019                     T1GCON          equ	25	;# 
+   253     001A                     TMR2            equ	26	;# 
+   254     001B                     PR2             equ	27	;# 
+   255     001C                     T2CON           equ	28	;# 
+   256     001E                     CPSCON0         equ	30	;# 
+   257     001F                     CPSCON1         equ	31	;# 
+   258     008C                     TRISA           equ	140	;# 
+   259     008D                     TRISB           equ	141	;# 
+   260     008E                     TRISC           equ	142	;# 
+   261     0090                     TRISE           equ	144	;# 
+   262     0091                     PIE1            equ	145	;# 
+   263     0092                     PIE2            equ	146	;# 
+   264     0093                     PIE3            equ	147	;# 
+   265     0095                     OPTION_REG      equ	149	;# 
+   266     0096                     PCON            equ	150	;# 
+   267     0097                     WDTCON          equ	151	;# 
+   268     0098                     OSCTUNE         equ	152	;# 
+   269     0099                     OSCCON          equ	153	;# 
+   270     009A                     OSCSTAT         equ	154	;# 
+   271     009B                     ADRES           equ	155	;# 
+   272     009B                     ADRESL          equ	155	;# 
+   273     009C                     ADRESH          equ	156	;# 
+   274     009D                     ADCON0          equ	157	;# 
+   275     009E                     ADCON1          equ	158	;# 
+   276     010C                     LATA            equ	268	;# 
+   277     010D                     LATB            equ	269	;# 
+   278     010E                     LATC            equ	270	;# 
+   279     0110                     LATE            equ	272	;# 
+   280     0111                     CM1CON0         equ	273	;# 
+   281     0112                     CM1CON1         equ	274	;# 
+   282     0113                     CM2CON0         equ	275	;# 
+   283     0114                     CM2CON1         equ	276	;# 
+   284     0115                     CMOUT           equ	277	;# 
+   285     0116                     BORCON          equ	278	;# 
+   286     0117                     FVRCON          equ	279	;# 
+   287     0118                     DACCON0         equ	280	;# 
+   288     0119                     DACCON1         equ	281	;# 
+   289     011A                     SRCON0          equ	282	;# 
+   290     011B                     SRCON1          equ	283	;# 
+   291     011D                     APFCON          equ	285	;# 
+   292     018C                     ANSELA          equ	396	;# 
+   293     018D                     ANSELB          equ	397	;# 
+   294     0191                     EEADR           equ	401	;# 
+   295     0191                     EEADRL          equ	401	;# 
+   296     0192                     EEADRH          equ	402	;# 
+   297     0193                     EEDAT           equ	403	;# 
+   298     0193                     EEDATL          equ	403	;# 
+   299     0193                     EEDATA          equ	403	;# 
+   300     0194                     EEDATH          equ	404	;# 
+   301     0195                     EECON1          equ	405	;# 
+   302     0196                     EECON2          equ	406	;# 
+   303     0199                     RCREG           equ	409	;# 
+   304     019A                     TXREG           equ	410	;# 
+   305     019B                     SP1BRG          equ	411	;# 
+   306     019B                     SP1BRGL         equ	411	;# 
+   307     019B                     SPBRG           equ	411	;# 
+   308     019B                     SPBRGL          equ	411	;# 
+   309     019C                     SP1BRGH         equ	412	;# 
+   310     019C                     SPBRGH          equ	412	;# 
+   311     019D                     RCSTA           equ	413	;# 
+   312     019E                     TXSTA           equ	414	;# 
+   313     019F                     BAUDCON         equ	415	;# 
+   314     020D                     WPUB            equ	525	;# 
+   315     0210                     WPUE            equ	528	;# 
+   316     0211                     SSPBUF          equ	529	;# 
+   317     0212                     SSPADD          equ	530	;# 
+   318     0213                     SSPMSK          equ	531	;# 
+   319     0214                     SSPSTAT         equ	532	;# 
+   320     0215                     SSPCON1         equ	533	;# 
+   321     0215                     SSPCON          equ	533	;# 
+   322     0216                     SSPCON2         equ	534	;# 
+   323     0217                     SSPCON3         equ	535	;# 
+   324     0291                     CCPR1           equ	657	;# 
+   325     0291                     CCPR1L          equ	657	;# 
+   326     0292                     CCPR1H          equ	658	;# 
+   327     0293                     CCP1CON         equ	659	;# 
+   328     0294                     PWM1CON         equ	660	;# 
+   329     0295                     CCP1AS          equ	661	;# 
+   330     0295                     ECCP1AS         equ	661	;# 
+   331     0296                     PSTR1CON        equ	662	;# 
+   332     0298                     CCPR2           equ	664	;# 
+   333     0298                     CCPR2L          equ	664	;# 
+   334     0299                     CCPR2H          equ	665	;# 
+   335     029A                     CCP2CON         equ	666	;# 
+   336     029B                     PWM2CON         equ	667	;# 
+   337     029C                     CCP2AS          equ	668	;# 
+   338     029C                     ECCP2AS         equ	668	;# 
+   339     029D                     PSTR2CON        equ	669	;# 
+   340     029E                     CCPTMRS0        equ	670	;# 
+   341     029F                     CCPTMRS1        equ	671	;# 
+   342     0311                     CCPR3           equ	785	;# 
+   343     0311                     CCPR3L          equ	785	;# 
+   344     0312                     CCPR3H          equ	786	;# 
+   345     0313                     CCP3CON         equ	787	;# 
+   346     0314                     PWM3CON         equ	788	;# 
+   347     0315                     CCP3AS          equ	789	;# 
+   348     0315                     ECCP3AS         equ	789	;# 
+   349     0316                     PSTR3CON        equ	790	;# 
+   350     0318                     CCPR4           equ	792	;# 
+   351     0318                     CCPR4L          equ	792	;# 
+   352     0319                     CCPR4H          equ	793	;# 
+   353     031A                     CCP4CON         equ	794	;# 
+   354     031C                     CCPR5           equ	796	;# 
+   355     031C                     CCPR5L          equ	796	;# 
+   356     031D                     CCPR5H          equ	797	;# 
+   357     031E                     CCP5CON         equ	798	;# 
+   358     0394                     IOCBP           equ	916	;# 
+   359     0395                     IOCBN           equ	917	;# 
+   360     0396                     IOCBF           equ	918	;# 
+   361     0415                     TMR4            equ	1045	;# 
+   362     0416                     PR4             equ	1046	;# 
+   363     0417                     T4CON           equ	1047	;# 
+   364     041C                     TMR6            equ	1052	;# 
+   365     041D                     PR6             equ	1053	;# 
+   366     041E                     T6CON           equ	1054	;# 
+   367     0791                     LCDCON          equ	1937	;# 
+   368     0792                     LCDPS           equ	1938	;# 
+   369     0793                     LCDREF          equ	1939	;# 
+   370     0794                     LCDCST          equ	1940	;# 
+   371     0795                     LCDRL           equ	1941	;# 
+   372     0798                     LCDSE0          equ	1944	;# 
+   373     0799                     LCDSE1          equ	1945	;# 
+   374     07A0                     LCDDATA0        equ	1952	;# 
+   375     07A1                     LCDDATA1        equ	1953	;# 
+   376     07A3                     LCDDATA3        equ	1955	;# 
+   377     07A4                     LCDDATA4        equ	1956	;# 
+   378     07A6                     LCDDATA6        equ	1958	;# 
+   379     07A7                     LCDDATA7        equ	1959	;# 
+   380     07A9                     LCDDATA9        equ	1961	;# 
+   381     07AA                     LCDDATA10       equ	1962	;# 
+   382     0FE4                     STATUS_SHAD     equ	4068	;# 
+   383     0FE5                     WREG_SHAD       equ	4069	;# 
+   384     0FE6                     BSR_SHAD        equ	4070	;# 
+   385     0FE7                     PCLATH_SHAD     equ	4071	;# 
+   386     0FE8                     FSR0L_SHAD      equ	4072	;# 
+   387     0FE9                     FSR0H_SHAD      equ	4073	;# 
+   388     0FEA                     FSR1L_SHAD      equ	4074	;# 
+   389     0FEB                     FSR1H_SHAD      equ	4075	;# 
+   390     0FED                     STKPTR          equ	4077	;# 
+   391     0FEE                     TOSL            equ	4078	;# 
+   392     0FEF                     TOSH            equ	4079	;# 
+   393     0011                     _PIR1bits       set	17
+   394     0099                     _OSCCON         set	153
+   395     008E                     _TRISCbits      set	142
+   396     008C                     _TRISAbits      set	140
+   397     010C                     _LATAbits       set	268
+   398     019A                     _TXREG          set	410
+   399     0199                     _RCREG          set	409
+   400     019D                     _RCSTAbits      set	413
+   401     019C                     _SPBRGH         set	412
+   402     019B                     _SPBRG          set	411
+   403     019F                     _BAUDCONbits    set	415
+   404     019E                     _TXSTAbits      set	414
+   405     018D                     _ANSELB         set	397
+   406     018C                     _ANSELA         set	396
+   407                           
+   408                           	psect	cinit
+   409     07FC                     start_initialization:	
+   410                           ; #config settings
+   411                           
+   412     07FC                     __initialization:
+   413                           
+   414                           ; Clear objects allocated to COMMON
+   415     07FC  01F0               	clrf	__pbssCOMMON& (0+127)
+   416     07FD                     end_of_initialization:	
+   417                           ;End of C runtime variable initialization code
+   418                           
+   419     07FD                     __end_of__initialization:
+   420     07FD  0020               	movlb	0
+   421     07FE  3187  2FBA         	ljmp	_main	;jump to C main() function
+   422                           
+   423                           	psect	bssCOMMON
+   424     0070                     __pbssCOMMON:
+   425     0070                     _data:
+   426     0070                     	ds	1
+   427                           
+   428                           	psect	cstackCOMMON
+   429     0000                     __pcstackCOMMON:
+   430     0000                     ?_Pin_Init:
+   431     0000                     ?_USART_Init:	
+   432                           ; 1 bytes @ 0x0
+   433                           
+   434     0000                     ?_RS485_TransmitMode:	
+   435                           ; 1 bytes @ 0x0
+   436                           
+   437     0000                     ?_RS485_ReceiveMode:	
+   438                           ; 1 bytes @ 0x0
+   439                           
+   440     0000                     ?_main:	
+   441                           ; 1 bytes @ 0x0
+   442                           
+   443     0000                     ??_Pin_Init:	
+   444                           ; 1 bytes @ 0x0
+   445                           
+   446     0000                     ??_USART_Init:	
+   447                           ; 1 bytes @ 0x0
+   448                           
+   449     0000                     ??_RS485_TransmitMode:	
+   450                           ; 1 bytes @ 0x0
+   451                           
+   452     0000                     ??_RS485_ReceiveMode:	
+   453                           ; 1 bytes @ 0x0
+   454                           
+   455     0000                     ??_main:	
+   456                           ; 1 bytes @ 0x0
+   457                           
+   458                           
+   459                           	psect	maintext
+   460     07BA                     __pmaintext:	
+   461                           ; 1 bytes @ 0x0
+   462 ;;
+   463 ;;Main: autosize = 0, tempsize = 0, incstack = 0, save=0
+   464 ;;
+   465 ;; *************** function _main *****************
+   466 ;; Defined at:
+   467 ;;		line 59 in file "rs485_bidirectional.c"
+   468 ;; Parameters:    Size  Location     Type
+   469 ;;		None
+   470 ;; Auto vars:     Size  Location     Type
+   471 ;;		None
+   472 ;; Return value:  Size  Location     Type
+   473 ;;                  1    wreg      void 
+   474 ;; Registers used:
+   475 ;;		wreg, status,2, status,0, pclath, cstack
+   476 ;; Tracked objects:
+   477 ;;		On entry : B1F/0
+   478 ;;		On exit  : 0/0
+   479 ;;		Unchanged: 0/0
+   480 ;; Data sizes:     COMMON   BANK0   BANK1   BANK2   BANK3   BANK4   BANK5   BANK6   BANK7   BANK8   BANK9  BANK10  BANK1
+      +1  BANK12
+   481 ;;      Params:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   482 ;;      Locals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   483 ;;      Temps:          0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   484 ;;      Totals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   485 ;;Total ram usage:        0 bytes
+   486 ;; Hardware stack levels required when called: 1
+   487 ;; This function calls:
+   488 ;;		_Pin_Init
+   489 ;;		_RS485_ReceiveMode
+   490 ;;		_RS485_TransmitMode
+   491 ;;		_USART_Init
+   492 ;; This function is called by:
+   493 ;;		Startup code after reset
+   494 ;; This function uses a non-reentrant model
+   495 ;;
+   496                           
+   497     07BA                     _main:	
+   498                           ;psect for function _main
+   499                           
+   500     07BA                     l643:	
+   501                           ;incstack = 0
+   502                           ; Regs used in _main: [wreg+status,2+status,0+pclath+cstack]
+   503                           
+   504     07BA  3072               	movlw	114
+   505     07BB  0021               	movlb	1	; select bank1
+   506     07BC  0099               	movwf	25	;volatile
+   507     07BD                     l645:
+   508     07BD  3187  27AD  3187   	fcall	_Pin_Init
+   509     07C0  3187  27A2  3187   	fcall	_USART_Init
+   510                           
+   511                           ;rs485_bidirectional.c: 94:     RS485_ReceiveMode();
+   512     07C3  3187  279C  3187   	fcall	_RS485_ReceiveMode
+   513     07C6                     l647:
+   514                           
+   515                           ;rs485_bidirectional.c: 97:         if(RCSTAbits.OERR) {
+   516     07C6  0023               	movlb	3	; select bank3
+   517     07C7  1C9D               	btfss	29,1	;volatile
+   518     07C8  2FCA               	goto	u11
+   519     07C9  2FCB               	goto	u10
+   520     07CA                     u11:
+   521     07CA  2FCD               	goto	l48
+   522     07CB                     u10:
+   523     07CB                     l649:
+   524                           
+   525                           ;rs485_bidirectional.c: 98:             RCSTAbits.CREN = 0;
+   526     07CB  121D               	bcf	29,4	;volatile
+   527                           
+   528                           ;rs485_bidirectional.c: 99:             RCSTAbits.CREN = 1;
+   529     07CC  161D               	bsf	29,4	;volatile
+   530     07CD                     l48:	
+   531                           ;rs485_bidirectional.c: 100:         }
+   532                           
+   533                           
+   534                           ;rs485_bidirectional.c: 102:         if(PIR1bits.RCIF)
+   535     07CD  0020               	movlb	0	; select bank0
+   536     07CE  1E91               	btfss	17,5	;volatile
+   537     07CF  2FD1               	goto	u21
+   538     07D0  2FD2               	goto	u20
+   539     07D1                     u21:
+   540     07D1  2FC6               	goto	l647
+   541     07D2                     u20:
+   542     07D2                     l651:
+   543                           
+   544                           ;rs485_bidirectional.c: 103:         {;rs485_bidirectional.c: 104:             data = RC
+      +                          REG;
+   545     07D2  0023               	movlb	3	; select bank3
+   546     07D3  0819               	movf	25,w	;volatile
+   547     07D4  00F0               	movwf	_data
+   548     07D5                     l653:
+   549                           
+   550                           ;rs485_bidirectional.c: 106:             if(data == 'A'){
+   551     07D5  3041               	movlw	65
+   552     07D6  0670               	xorwf	_data,w
+   553     07D7  1D03               	btfss	3,2
+   554     07D8  2FDA               	goto	u31
+   555     07D9  2FDB               	goto	u30
+   556     07DA                     u31:
+   557     07DA  2FC6               	goto	l647
+   558     07DB                     u30:
+   559     07DB                     l655:
+   560                           
+   561                           ;rs485_bidirectional.c: 107:                 LATAbits.LATA1 = !LATAbits.LATA1;
+   562     07DB  1003               	clrc
+   563     07DC  0022               	movlb	2	; select bank2
+   564     07DD  1C8C               	btfss	12,1	;volatile
+   565     07DE  1403               	setc
+   566     07DF  1803               	btfsc	3,0
+   567     07E0  2FE2               	goto	u41
+   568     07E1  2FE5               	goto	u40
+   569     07E2                     u41:
+   570     07E2  0022               	movlb	2	; select bank2
+   571     07E3  148C               	bsf	12,1	;volatile
+   572     07E4  2FE7               	goto	u54
+   573     07E5                     u40:
+   574     07E5  0022               	movlb	2	; select bank2
+   575     07E6  108C               	bcf	12,1	;volatile
+   576     07E7                     u54:
+   577     07E7                     l657:
+   578                           
+   579                           ;rs485_bidirectional.c: 109:                 RS485_TransmitMode();
+   580     07E7  3187  279F  3187   	fcall	_RS485_TransmitMode
+   581     07EA                     l51:	
+   582                           ;rs485_bidirectional.c: 111:                 while (!PIR1bits.TXIF);
+   583                           
+   584     07EA  0020               	movlb	0	; select bank0
+   585     07EB  1E11               	btfss	17,4	;volatile
+   586     07EC  2FEE               	goto	u61
+   587     07ED  2FEF               	goto	u60
+   588     07EE                     u61:
+   589     07EE  2FEA               	goto	l51
+   590     07EF                     u60:
+   591     07EF                     l53:
+   592                           
+   593                           ;rs485_bidirectional.c: 112:                 TXREG = 'B';
+   594     07EF  3042               	movlw	66
+   595     07F0  0023               	movlb	3	; select bank3
+   596     07F1  009A               	movwf	26	;volatile
+   597     07F2                     l54:	
+   598                           ;rs485_bidirectional.c: 113:                 while (!TXSTAbits.TRMT);
+   599                           
+   600     07F2  1C9E               	btfss	30,1	;volatile
+   601     07F3  2FF5               	goto	u71
+   602     07F4  2FF6               	goto	u70
+   603     07F5                     u71:
+   604     07F5  2FF2               	goto	l54
+   605     07F6                     u70:
+   606     07F6                     l659:
+   607                           
+   608                           ;rs485_bidirectional.c: 115:                 RS485_ReceiveMode();
+   609     07F6  3187  279C  3187   	fcall	_RS485_ReceiveMode
+   610     07F9  2FC6               	goto	l647
+   611     07FA  3180  2802         	ljmp	start
+   612     07FC                     __end_of_main:
+   613                           
+   614                           	psect	text1
+   615     07A2                     __ptext1:	
+   616 ;; *************** function _USART_Init *****************
+   617 ;; Defined at:
+   618 ;;		line 37 in file "rs485_bidirectional.c"
+   619 ;; Parameters:    Size  Location     Type
+   620 ;;		None
+   621 ;; Auto vars:     Size  Location     Type
+   622 ;;		None
+   623 ;; Return value:  Size  Location     Type
+   624 ;;                  1    wreg      void 
+   625 ;; Registers used:
+   626 ;;		status,2
+   627 ;; Tracked objects:
+   628 ;;		On entry : 0/0
+   629 ;;		On exit  : 0/0
+   630 ;;		Unchanged: 0/0
+   631 ;; Data sizes:     COMMON   BANK0   BANK1   BANK2   BANK3   BANK4   BANK5   BANK6   BANK7   BANK8   BANK9  BANK10  BANK1
+      +1  BANK12
+   632 ;;      Params:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   633 ;;      Locals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   634 ;;      Temps:          0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   635 ;;      Totals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   636 ;;Total ram usage:        0 bytes
+   637 ;; Hardware stack levels used: 1
+   638 ;; This function calls:
+   639 ;;		Nothing
+   640 ;; This function is called by:
+   641 ;;		_main
+   642 ;; This function uses a non-reentrant model
+   643 ;;
+   644                           
+   645     07A2                     _USART_Init:	
+   646                           ;psect for function _USART_Init
+   647                           
+   648     07A2                     l629:	
+   649                           ;incstack = 0
+   650                           ; Regs used in _USART_Init: [status,2]
+   651                           
+   652                           
+   653                           ;rs485_bidirectional.c: 38: 
+   654     07A2  0023               	movlb	3	; select bank3
+   655     07A3  121E               	bcf	30,4	;volatile
+   656                           
+   657                           ;rs485_bidirectional.c: 39: void RS485_ReceiveMode(void) {
+   658     07A4  151E               	bsf	30,2	;volatile
+   659                           
+   660                           ;rs485_bidirectional.c: 40:     LATAbits.LATA2 = 0;
+   661     07A5  159F               	bsf	31,3	;volatile
+   662                           
+   663                           ;rs485_bidirectional.c: 42: 
+   664     07A6  30CF               	movlw	207
+   665     07A7  009B               	movwf	27	;volatile
+   666     07A8                     l631:
+   667                           
+   668                           ;rs485_bidirectional.c: 43: void main(void) {
+   669     07A8  019C               	clrf	28	;volatile
+   670     07A9                     l633:
+   671                           
+   672                           ;rs485_bidirectional.c: 45:     Pin_Init();
+   673     07A9  179D               	bsf	29,7	;volatile
+   674     07AA                     l635:
+   675                           
+   676                           ;rs485_bidirectional.c: 46:     USART_Init();
+   677     07AA  169E               	bsf	30,5	;volatile
+   678     07AB                     l637:
+   679     07AB  161D               	bsf	29,4	;volatile
+   680     07AC                     l36:
+   681     07AC  0008               	return
+   682     07AD                     __end_of_USART_Init:
+   683                           
+   684                           	psect	text2
+   685     079F                     __ptext2:	
+   686 ;; *************** function _RS485_TransmitMode *****************
+   687 ;; Defined at:
+   688 ;;		line 51 in file "rs485_bidirectional.c"
+   689 ;; Parameters:    Size  Location     Type
+   690 ;;		None
+   691 ;; Auto vars:     Size  Location     Type
+   692 ;;		None
+   693 ;; Return value:  Size  Location     Type
+   694 ;;                  1    wreg      void 
+   695 ;; Registers used:
+   696 ;;		None
+   697 ;; Tracked objects:
+   698 ;;		On entry : 0/0
+   699 ;;		On exit  : 0/0
+   700 ;;		Unchanged: 0/0
+   701 ;; Data sizes:     COMMON   BANK0   BANK1   BANK2   BANK3   BANK4   BANK5   BANK6   BANK7   BANK8   BANK9  BANK10  BANK1
+      +1  BANK12
+   702 ;;      Params:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   703 ;;      Locals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   704 ;;      Temps:          0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   705 ;;      Totals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   706 ;;Total ram usage:        0 bytes
+   707 ;; Hardware stack levels used: 1
+   708 ;; This function calls:
+   709 ;;		Nothing
+   710 ;; This function is called by:
+   711 ;;		_main
+   712 ;; This function uses a non-reentrant model
+   713 ;;
+   714                           
+   715     079F                     _RS485_TransmitMode:	
+   716                           ;psect for function _RS485_TransmitMode
+   717                           
+   718     079F                     l639:	
+   719                           ;incstack = 0
+   720                           ; Regs used in _RS485_TransmitMode: []
+   721                           
+   722     079F  0022               	movlb	2	; select bank2
+   723     07A0  150C               	bsf	12,2	;volatile
+   724     07A1                     l39:
+   725     07A1  0008               	return
+   726     07A2                     __end_of_RS485_TransmitMode:
+   727                           
+   728                           	psect	text3
+   729     079C                     __ptext3:	
+   730 ;; *************** function _RS485_ReceiveMode *****************
+   731 ;; Defined at:
+   732 ;;		line 55 in file "rs485_bidirectional.c"
+   733 ;; Parameters:    Size  Location     Type
+   734 ;;		None
+   735 ;; Auto vars:     Size  Location     Type
+   736 ;;		None
+   737 ;; Return value:  Size  Location     Type
+   738 ;;                  1    wreg      void 
+   739 ;; Registers used:
+   740 ;;		None
+   741 ;; Tracked objects:
+   742 ;;		On entry : 0/0
+   743 ;;		On exit  : 0/0
+   744 ;;		Unchanged: 0/0
+   745 ;; Data sizes:     COMMON   BANK0   BANK1   BANK2   BANK3   BANK4   BANK5   BANK6   BANK7   BANK8   BANK9  BANK10  BANK1
+      +1  BANK12
+   746 ;;      Params:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   747 ;;      Locals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   748 ;;      Temps:          0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   749 ;;      Totals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   750 ;;Total ram usage:        0 bytes
+   751 ;; Hardware stack levels used: 1
+   752 ;; This function calls:
+   753 ;;		Nothing
+   754 ;; This function is called by:
+   755 ;;		_main
+   756 ;; This function uses a non-reentrant model
+   757 ;;
+   758                           
+   759     079C                     _RS485_ReceiveMode:	
+   760                           ;psect for function _RS485_ReceiveMode
+   761                           
+   762     079C                     l641:	
+   763                           ;incstack = 0
+   764                           ; Regs used in _RS485_ReceiveMode: []
+   765                           
+   766     079C  0022               	movlb	2	; select bank2
+   767     079D  110C               	bcf	12,2	;volatile
+   768     079E                     l42:
+   769     079E  0008               	return
+   770     079F                     __end_of_RS485_ReceiveMode:
+   771                           
+   772                           	psect	text4
+   773     07AD                     __ptext4:	
+   774 ;; *************** function _Pin_Init *****************
+   775 ;; Defined at:
+   776 ;;		line 23 in file "rs485_bidirectional.c"
+   777 ;; Parameters:    Size  Location     Type
+   778 ;;		None
+   779 ;; Auto vars:     Size  Location     Type
+   780 ;;		None
+   781 ;; Return value:  Size  Location     Type
+   782 ;;                  1    wreg      void 
+   783 ;; Registers used:
+   784 ;;		status,2
+   785 ;; Tracked objects:
+   786 ;;		On entry : 0/0
+   787 ;;		On exit  : 0/0
+   788 ;;		Unchanged: 0/0
+   789 ;; Data sizes:     COMMON   BANK0   BANK1   BANK2   BANK3   BANK4   BANK5   BANK6   BANK7   BANK8   BANK9  BANK10  BANK1
+      +1  BANK12
+   790 ;;      Params:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   791 ;;      Locals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   792 ;;      Temps:          0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   793 ;;      Totals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+   794 ;;Total ram usage:        0 bytes
+   795 ;; Hardware stack levels used: 1
+   796 ;; This function calls:
+   797 ;;		Nothing
+   798 ;; This function is called by:
+   799 ;;		_main
+   800 ;; This function uses a non-reentrant model
+   801 ;;
+   802                           
+   803     07AD                     _Pin_Init:	
+   804                           ;psect for function _Pin_Init
+   805                           
+   806     07AD                     l615:	
+   807                           ;incstack = 0
+   808                           ; Regs used in _Pin_Init: [status,2]
+   809                           
+   810                           
+   811                           ;rs485_bidirectional.c: 24:     BAUDCONbits.BRG16 = 1;
+   812     07AD  0023               	movlb	3	; select bank3
+   813     07AE  018C               	clrf	12	;volatile
+   814                           
+   815                           ;rs485_bidirectional.c: 25: 
+   816     07AF  018D               	clrf	13	;volatile
+   817     07B0                     l617:
+   818                           
+   819                           ;rs485_bidirectional.c: 27:     SPBRGH = 0;
+   820     07B0  0021               	movlb	1	; select bank1
+   821     07B1  110C               	bcf	12,2	;volatile
+   822     07B2                     l619:
+   823                           
+   824                           ;rs485_bidirectional.c: 28: 
+   825     07B2  108C               	bcf	12,1	;volatile
+   826     07B3                     l621:
+   827                           
+   828                           ;rs485_bidirectional.c: 29:     RCSTAbits.SPEN = 1;
+   829     07B3  0022               	movlb	2	; select bank2
+   830     07B4  110C               	bcf	12,2	;volatile
+   831     07B5                     l623:
+   832                           
+   833                           ;rs485_bidirectional.c: 30:     TXSTAbits.TXEN = 1;
+   834     07B5  108C               	bcf	12,1	;volatile
+   835     07B6                     l625:
+   836                           
+   837                           ;rs485_bidirectional.c: 32:     RCSTAbits.CREN = 1;
+   838     07B6  0021               	movlb	1	; select bank1
+   839     07B7  170E               	bsf	14,6	;volatile
+   840     07B8                     l627:
+   841                           
+   842                           ;rs485_bidirectional.c: 33: }
+   843     07B8  178E               	bsf	14,7	;volatile
+   844     07B9                     l33:
+   845     07B9  0008               	return
+   846     07BA                     __end_of_Pin_Init:
+   847     0003                     ___latbits      equ	3
+   848     007E                     btemp           set	126	;btemp
+   849     007E                     btemp0          set	126
+   850     007F                     btemp1          set	127
+   851     007E                     wtemp0          set	126
+   852     007F                     wtemp0a         set	127
+   853     007F                     ttemp0a         set	127
+   854     0080                     ltemp0a         set	128
+   855                           
+   856                           	psect	config
+   857                           
+   858                           ;Config register CONFIG1 @ 0x8007
+   859                           ;	Oscillator Selection
+   860                           ;	FOSC = INTOSC, INTOSC oscillator: I/O function on CLKIN pin
+   861                           ;	Watchdog Timer Enable
+   862                           ;	WDTE = OFF, WDT disabled
+   863                           ;	Power-up Timer Enable
+   864                           ;	PWRTE = OFF, PWRT disabled
+   865                           ;	MCLR Pin Function Select
+   866                           ;	MCLRE = OFF, MCLR/VPP pin function is digital input
+   867                           ;	Flash Program Memory Code Protection
+   868                           ;	CP = OFF, Program memory code protection is disabled
+   869                           ;	Data Memory Code Protection
+   870                           ;	CPD = 0x1, unprogrammed default
+   871                           ;	Brown-out Reset Enable
+   872                           ;	BOREN = ON, Brown-out Reset enabled
+   873                           ;	Clock Out Enable
+   874                           ;	CLKOUTEN = OFF, CLKOUT function is disabled. I/O or oscillator function on the CLKOUT 
+      +                          pin
+   875                           ;	Internal/External Switchover
+   876                           ;	IESO = OFF, Internal/External Switchover mode is disabled
+   877                           ;	Fail-Safe Clock Monitor Enable
+   878                           ;	FCMEN = OFF, Fail-Safe Clock Monitor is disabled
+   879     8007                     	org	32775
+   880     8007  0FA4               	dw	4004
+   881                           
+   882                           ;Config register CONFIG2 @ 0x8008
+   883                           ;	Flash Memory Self-Write Protection
+   884                           ;	WRT = 0x3, unprogrammed default
+   885                           ;	Voltage Regulator Capacitor Enable
+   886                           ;	VCAPEN = 0x3, unprogrammed default
+   887                           ;	PLL Enable
+   888                           ;	PLLEN = 0x1, unprogrammed default
+   889                           ;	Stack Overflow/Underflow Reset Enable
+   890                           ;	STVREN = 0x1, unprogrammed default
+   891                           ;	Brown-out Reset Voltage Selection
+   892                           ;	BORV = 0x1, unprogrammed default
+   893                           ;	Low-Voltage Programming Enable
+   894                           ;	LVP = OFF, High-voltage on MCLR/VPP must be used for programming
+   895     8008                     	org	32776
+   896     8008  1FFF               	dw	8191
+
+Data Sizes:
+    Strings     0
+    Constant    0
+    Data        0
+    BSS         1
+    Persistent  48
+    Stack       0
+
+Auto Spaces:
+    Space          Size  Autos    Used
+    COMMON           14      0       1
+    BANK0            80      0       0
+    BANK1            80      0       0
+    BANK2            80      0       0
+    BANK3            80      0       0
+    BANK4            80      0       0
+    BANK5            80      0       0
+    BANK6            80      0       0
+    BANK7            80      0       0
+    BANK8            80      0       0
+    BANK9            80      0       0
+    BANK10           80      0       0
+    BANK11           80      0       0
+    BANK12           48      0       0
+
+Pointer List with Targets:
+
+    None.
+
+Critical Paths under _main in COMMON
+
+    None.
+
+Critical Paths under _main in BANK0
+
+    None.
+
+Critical Paths under _main in BANK1
+
+    None.
+
+Critical Paths under _main in BANK2
+
+    None.
+
+Critical Paths under _main in BANK3
+
+    None.
+
+Critical Paths under _main in BANK4
+
+    None.
+
+Critical Paths under _main in BANK5
+
+    None.
+
+Critical Paths under _main in BANK6
+
+    None.
+
+Critical Paths under _main in BANK7
+
+    None.
+
+Critical Paths under _main in BANK8
+
+    None.
+
+Critical Paths under _main in BANK9
+
+    None.
+
+Critical Paths under _main in BANK10
+
+    None.
+
+Critical Paths under _main in BANK11
+
+    None.
+
+Critical Paths under _main in BANK12
+
+    None.
+
+Call Graph Tables:
+
+ ---------------------------------------------------------------------------------
+ (Depth) Function   	        Calls       Base Space   Used Autos Params    Refs
+ ---------------------------------------------------------------------------------
+ (0) _main                                                 0     0      0       0
+                           _Pin_Init
+                  _RS485_ReceiveMode
+                 _RS485_TransmitMode
+                         _USART_Init
+ ---------------------------------------------------------------------------------
+ (1) _USART_Init                                           0     0      0       0
+ ---------------------------------------------------------------------------------
+ (1) _RS485_TransmitMode                                   0     0      0       0
+ ---------------------------------------------------------------------------------
+ (1) _RS485_ReceiveMode                                    0     0      0       0
+ ---------------------------------------------------------------------------------
+ (1) _Pin_Init                                             0     0      0       0
+ ---------------------------------------------------------------------------------
+ Estimated maximum stack depth 1
+ ---------------------------------------------------------------------------------
+
+ Call Graph Graphs:
+
+ _main (ROOT)
+   _Pin_Init
+   _RS485_ReceiveMode
+   _RS485_TransmitMode
+   _USART_Init
+
+Address spaces:
+Name               Size   Autos  Total    Usage
+BITCOMMON           14      0       0      0.0%
+BITBANK0            80      0       0      0.0%
+BITBANK1            80      0       0      0.0%
+BITBANK2            80      0       0      0.0%
+BITBANK3            80      0       0      0.0%
+BITBANK4            80      0       0      0.0%
+BITBANK5            80      0       0      0.0%
+BITBANK6            80      0       0      0.0%
+BITBANK7            80      0       0      0.0%
+BITBANK8            80      0       0      0.0%
+BITBANK9            80      0       0      0.0%
+BITBANK10           80      0       0      0.0%
+BITBANK11           80      0       0      0.0%
+BITBANK12           48      0       0      0.0%
+BIGRAM            1008      0       0      0.0%
+COMMON              14      0       1      7.1%
+BANK0               80      0       0      0.0%
+BANK1               80      0       0      0.0%
+BANK2               80      0       0      0.0%
+BANK3               80      0       0      0.0%
+BANK4               80      0       0      0.0%
+BANK5               80      0       0      0.0%
+BANK6               80      0       0      0.0%
+BANK7               80      0       0      0.0%
+BANK8               80      0       0      0.0%
+BANK9               80      0       0      0.0%
+BANK10              80      0       0      0.0%
+BANK11              80      0       0      0.0%
+BANK12              48      0       0      0.0%
+STACK                0      0       0      0.0%
+DATA                 0      0       1      0.0%
+
+
+Microchip Technology PIC Macro Assembler V3.10 build 20250813170317 
+Symbol Table                                                                                   Sun Jun  7 14:55:47 2026
+
+                        l33 07B9                          l42 079E                          l51 07EA  
+                        l36 07AC                          l53 07EF                          l54 07F2  
+                        l39 07A1                          l48 07CD                          u10 07CB  
+                        u11 07CA                          u20 07D2                          u21 07D1  
+                        u30 07DB                          u31 07DA                          u40 07E5  
+                        u41 07E2                          u60 07EF                          u61 07EE  
+                        u70 07F6                          u54 07E7                          u71 07F5  
+                       l621 07B3                         l623 07B5                         l615 07AD  
+                       l631 07A8                         l625 07B6                         l617 07B0  
+                       l641 079C                         l633 07A9                         l627 07B8  
+                       l619 07B2                         l635 07AA                         l651 07D2  
+                       l643 07BA                         l637 07AB                         l629 07A2  
+                       l653 07D5                         l645 07BD                         l639 079F  
+                       l655 07DB                         l647 07C6                         l657 07E7  
+                       l649 07CB                         l659 07F6                        _data 0070  
+                      _main 07BA                        btemp 007E                        start 0002  
+                     ?_main 0000                       _RCREG 0199                       _SPBRG 019B  
+                     _TXREG 019A                       btemp0 007E                       btemp1 007F  
+                     status 0003                       wtemp0 007E                 ?_USART_Init 0000  
+           __initialization 07FC                __end_of_main 07FC            __end_of_Pin_Init 07BA  
+                    ??_main 0000                      _ANSELA 018C                      _ANSELB 018D  
+                    _OSCCON 0099                      _SPBRGH 019C           _RS485_ReceiveMode 079C  
+        ?_RS485_ReceiveMode 0000                      ltemp0a 0080         ??_RS485_ReceiveMode 0000  
+                    ttemp0a 007F                      wtemp0a 007F     __end_of__initialization 07FD  
+ __end_of_RS485_ReceiveMode 079F              __pcstackCOMMON 0000                   ?_Pin_Init 0000  
+                __pmaintext 07BA                  ??_Pin_Init 0000                ??_USART_Init 0000  
+                   __ptext1 07A2                     __ptext2 079F                     __ptext3 079C  
+                   __ptext4 07AD          __end_of_USART_Init 07AD        end_of_initialization 07FD  
+__end_of_RS485_TransmitMode 07A2                   _RCSTAbits 019D                   _TRISAbits 008C  
+                 _TRISCbits 008E                   _TXSTAbits 019E                 _BAUDCONbits 019F  
+       start_initialization 07FC                 __pbssCOMMON 0070                   ___latbits 0003  
+                  _LATAbits 010C                    _PIR1bits 0011          _RS485_TransmitMode 079F  
+       ?_RS485_TransmitMode 0000                    _Pin_Init 07AD        ??_RS485_TransmitMode 0000  
+                _USART_Init 07A2  
