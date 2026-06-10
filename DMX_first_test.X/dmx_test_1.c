@@ -1,6 +1,4 @@
 #include <xc.h>
-#include <string.h>
-#include <stdio.h>
 
 #pragma config FOSC = INTOSC
 #pragma config WDTE = OFF
@@ -14,8 +12,15 @@
 #pragma config LVP = OFF
 
 #define _XTAL_FREQ 8000000UL
+#define DMX_CHANNELS 255
 
-unsigned char dmx_data[] = {255, 125, 0, 255};
+unsigned char dmx_data[DMX_CHANNELS]
+= {
+    255, 125, 0, 255, 0,
+    0, 0, 30, 0, 0,
+    0, 0, 0, 0, 0,
+    0
+};
 unsigned int dmx_length = sizeof(dmx_data) / sizeof(dmx_data[0]);
 
 void Pin_Init(void) {
@@ -84,6 +89,33 @@ void main(void) {
 
     while (1) {
         dmx_send_frame();
-        __delay_ms(25);
+        __delay_ms(1);
     }
 }
+/*
+ for (unsigned int i = 0; i < 512; i++) {
+    if (i == 0) dmx_send_byte(255);
+    else if (i == 1) dmx_send_byte(125);
+    else if (i == 3) dmx_send_byte(255);
+    else dmx_send_byte(0);
+}
+ */
+
+/*
+ void dmx_send_frame_512_no_buffer(void)
+{
+    dmx_send_break_mab();
+
+    dmx_send_byte(0x00); // Start Code
+
+    for (unsigned int i = 0; i < 512; i++) {
+        if (i == 0) dmx_send_byte(255);
+        else if (i == 1) dmx_send_byte(125);
+        else if (i == 3) dmx_send_byte(255);
+        else if (i == 7) dmx_send_byte(30);
+        else dmx_send_byte(0);
+    }
+
+    while(!TXSTAbits.TRMT);
+}
+ */
