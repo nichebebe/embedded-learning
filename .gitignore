@@ -1,0 +1,33 @@
+# MPLAB / VS Code generated files
+_build/
+out/
+dist/
+build/
+debug/
+production/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+build.ninja
+compile_commands.json
+*.ninja
+*.ninja_deps
+*.ninja_log
+
+# MPLAB extension temporary files
+Import Summary*.*
+CMakeConfigureLog*.*
+InstallScripts.json
+
+# VS Code local settings
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# temporary files
+*.tmp
+*.log
