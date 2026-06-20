@@ -43,9 +43,10 @@ void PWM_Init(void)
 {
     OSCCON = 0b01110010;    //8MHz
     
-    TRISCbits.TRISC2 = 0;   //RC2 OUT
-    TRISCbits.TRISC1 = 0;   //RC1 OUT
-    TRISBbits.TRISB5 = 0;   //RB5 OUT
+    TRISCbits.TRISC2 = 0;   //CCP1 OUT
+    TRISCbits.TRISC1 = 0;   //CCP2 OUT
+    TRISBbits.TRISB5 = 0;   //CCP3 OUT
+    TRISBbits.TRISB0 = 0;   //CCP4 OUT
     
     ANSELB = 0x00;  //RBxbits digital
     
@@ -59,6 +60,29 @@ void PWM_Init(void)
     CCP1CON = 0b00001100;   //CCP1 PWM mode
     CCP2CON = 0b00001100;   //CCP2 PWM mode
     CCP3CON = 0b00001100;   //CCP3 PWM mode
+    CCP4CON = 0b00001100;   //CCP4 PWM mode
+}
+
+void pwm_apply(unsigned char i, unsigned char data)
+{
+    switch (i)
+    {
+        case 0:
+            CCPR1L = data;
+            break;
+            
+        case 1:
+            CCPR2L = data;
+            break;
+            
+        case 2:
+            CCPR3L = data;
+            break;
+            
+        case 3:
+            CCPR4L = data;
+            break;
+    }
 }
 
 void USART_Init(void) {
@@ -90,7 +114,7 @@ void dmx_receive(void) {
         start_code = data;
     } 
 
-    else if (dmx_count <= 512) {
+    else if ((dmx_count <= 512) && (start_code == 0x00)) {
         for (unsigned char i = 0; i < 4; i++) {
             if (dmx_count == my_address[i]) {
                 dimmer[i] = data;
@@ -104,7 +128,7 @@ void dmx_receive(void) {
 }
 
 void main(void) {
-    OSCCON = 0b01110010;
+    PWM_Init();
     Pin_Init();
     USART_Init();
 
@@ -115,6 +139,11 @@ void main(void) {
         }
 
         dmx_receive();
+        
+        for(unsigned char i = 0; i < 4; i++)
+        {
+            pwm_apply(i, dimmer[i]);
+        }
     }
 }
 
