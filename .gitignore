@@ -31,3 +31,20 @@ Thumbs.db
 # temporary files
 *.tmp
 *.log
+
+# MPLAB private/user settings
+private.xml
+**/private.xml
+nbproject/private/
+
+# MPLAB VS Code / CMake generated files
+cmake/
+**/cmake/
+CMakeLists.txt
+CMakePresets.json
+cmake-hash.json
+file.cmake
+main.cmake
+overrides.cmake
+rule.cmake
+toolchain.cmake
