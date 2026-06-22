@@ -55,7 +55,7 @@ void PWM_Init(void)
     
     T2CONbits.T2CKPS = 0b10;    //prescaler 1:16
     T2CONbits.TMR2ON = 1;       //Timer2 ON
-    PR2 = 124;              // 1kHz
+    PR2 = 124;                  // 1kHz
     
     CCP1CON = 0b00001100;   //CCP1 PWM mode
     CCP2CON = 0b00001100;   //CCP2 PWM mode
@@ -65,22 +65,35 @@ void PWM_Init(void)
 
 void pwm_apply(unsigned char i, unsigned char data)
 {
+    unsigned int duty;
+    
+    duty = ((unsigned int) data << 1) - (data >> 5);
+    
+    if (duty > 500)
+    {
+        duty = 500;
+    }
+    
     switch (i)
     {
         case 0:
-            CCPR1L = data;
+            CCPR1L = duty >> 2;
+            CCP1CONbits.DC1B = duty & 0x03;
             break;
             
         case 1:
-            CCPR2L = data;
+            CCPR2L = duty >> 2;
+            CCP2CONbits.DC2B = duty & 0x03;
             break;
             
         case 2:
-            CCPR3L = data;
+            CCPR3L = duty >> 2;
+            CCP3CONbits.DC3B = duty & 0x03;
             break;
             
         case 3:
-            CCPR4L = data;
+            CCPR4L = duty >> 2;
+            CCP4CONbits.DC4B = duty & 0x03;
             break;
     }
 }
