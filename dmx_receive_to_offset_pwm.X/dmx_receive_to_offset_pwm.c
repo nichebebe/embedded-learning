@@ -1,7 +1,7 @@
 /*
- * File:   dmx_interrupt_receive_to_pwm.c
+ * File:   dmx_receive_to_offset_pwm.c
  *
- * Created on June 25, 2026, 10:27 AM
+ * Created on June 26, 2026, 8:13 AM
  */
 
 
@@ -22,9 +22,10 @@
 
 unsigned int dmx_count;
 unsigned int my_address[4] = {1, 2, 3, 4};
-unsigned char dimmer[4];
+volatile unsigned char dimmer[4];
 unsigned char dummy;
 unsigned char start_code;
+volatile unsigned char save_request = 0;
 
 void Pin_Init(void) {
     ANSELA = 0x00;
@@ -32,14 +33,20 @@ void Pin_Init(void) {
 
     TRISAbits.TRISA2 = 0;
     TRISAbits.TRISA1 = 0;
-    LATAbits.LATA2 = 0;
+    TRISBbits.TRISB4 = 1;
 
     TRISCbits.TRISC3 = 0;
-    
+
     TRISCbits.TRISC6 = 1;
     TRISCbits.TRISC7 = 1;
 
     PIE1bits.RCIE = 1;
+
+    IOCBPbits.IOCBP4 = 0;
+    IOCBNbits.IOCBN4 = 1;
+    IOCBFbits.IOCBF4 = 0;
+    INTCONbits.IOCIF = 0;
+    INTCONbits.IOCIE = 1;
     INTCONbits.PEIE = 1;
     INTCONbits.GIE = 1;
 }
@@ -47,11 +54,13 @@ void Pin_Init(void) {
 void PWM_Init(void) {
     OSCCON = 0b01110010; //8MHz
 
+    TRISAbits.TRISA5 = 1;
     TRISCbits.TRISC2 = 0; //CCP1 OUT
     TRISCbits.TRISC1 = 0; //CCP2 OUT
     TRISBbits.TRISB5 = 0; //CCP3 OUT
     TRISBbits.TRISB0 = 0; //CCP4 OUT
 
+    ANSELA = 0x00;
     ANSELB = 0x00; //RBxbits digital
 
     APFCONbits.CCP2SEL = 0; //0:RC1, 1:RB3
@@ -65,6 +74,51 @@ void PWM_Init(void) {
     CCP2CON = 0b00001100; //CCP2 PWM mode
     CCP3CON = 0b00001100; //CCP3 PWM mode
     CCP4CON = 0b00001100; //CCP4 PWM mode
+}
+
+void EEPROM_Write(unsigned char addr, unsigned char data) {
+    EEADRL = addr;
+    EEDATL = data;
+    EECON1bits.CFGS = 0;
+    EECON1bits.EEPGD = 0;
+    EECON1bits.WREN = 1;
+
+    INTCONbits.GIE = 0;
+    EECON2 = 0x55;
+    EECON2 = 0xAA;
+    EECON1bits.WR = 1;
+
+    while (EECON1bits.WR);
+
+    EECON1bits.WREN = 0;
+    INTCONbits.GIE = 1;
+}
+
+unsigned char EEPROM_Read(unsigned char addr) {
+    EEADRL = addr;
+    EECON1bits.CFGS = 0;
+    EECON1bits.EEPGD = 0;
+    EECON1bits.RD = 1;
+
+    return EEDATL;
+}
+
+unsigned int Apply_offset(unsigned int data_vol, unsigned int offset) 
+{
+    unsigned int span;
+    unsigned int value;
+    
+    if (data_vol <= 2) return 0;
+    if (data_vol >= 255) return 255;
+    
+    span = 255 - offset;
+    
+    value = offset + (((unsigned int)(data_vol - 2) * span) >> 8);
+    
+    if (value > 255) value = 255;
+
+    return (unsigned char)value;
+
 }
 
 void pwm_apply(unsigned char i, unsigned char data) {
@@ -112,18 +166,24 @@ void USART_Init(void) {
 }
 
 void __interrupt() isr(void) {
-    
+
+    if (INTCONbits.IOCIF) {
+        if (IOCBFbits.IOCBF4) {
+            save_request = 1;
+            IOCBFbits.IOCBF4 = 0;
+        }
+        INTCONbits.IOCIF = 0;
+    }
+
     if (!PIR1bits.RCIF) {
         LATCbits.LATC3 = 0;
         return;
     }
-    
     if (RCSTAbits.OERR) {
         RCSTAbits.CREN = 0;
         RCSTAbits.CREN = 1;
-//        dmx_count = 0;
-//        start_code = 0xFF;
-//        return;
+        dmx_count = 0;
+        return;
     }
 
     if (RCSTAbits.FERR) {
@@ -143,29 +203,37 @@ void __interrupt() isr(void) {
             if (dmx_count == my_address[i]) {
                 dimmer[i] = data;
             }
-            //        if (dmx_count == 1) dimmer[0] = data;
-            //        if (dmx_count == 2) dimmer[1] = data;
-            //        if (dmx_count == 3) dimmer[2] = data;
-            //        if (dmx_count == 4) dimmer[3] = data;
-
         }
-
     }
     dmx_count++;
+
+
 }
 
 void main(void) {
     Pin_Init();
     USART_Init();
     PWM_Init();
+    unsigned char stored_offset[4];
+    unsigned char write_val[4];
+
+    for (char i = 0; i < 4; i++) {
+        stored_offset[i] = EEPROM_Read(i);
+    }
 
     while (1) {
+        if (save_request) {
+            save_request = 0;
 
-        for (unsigned char i = 0; i < 4; i++) {
-            pwm_apply(i, dimmer[i]);
+            for (unsigned char i = 0; i < 4; i++) {
+                EEPROM_Write(i, dimmer[i]);
+                stored_offset[i] = dimmer[i];
+            }
         }
 
+        for (unsigned char i = 0; i < 4; i++) {
+            write_val[i] = Apply_offset(dimmer[i], stored_offset[i]);
+            pwm_apply(i, write_val[i]);
+        }
     }
 }
-
-
