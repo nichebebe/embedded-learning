@@ -17,8 +17,8 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>5chPWMA.c</itemPath>
     </logicalFolder>
-    <itemPath>5chPWMA.c</itemPath>
   </logicalFolder>
   <sourceRootList>
     <Elem>.</Elem>

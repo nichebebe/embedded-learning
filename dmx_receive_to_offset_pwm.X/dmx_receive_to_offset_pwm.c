@@ -42,11 +42,11 @@ void Pin_Init(void) {
 
     PIE1bits.RCIE = 1;
 
-    IOCBPbits.IOCBP4 = 0;
-    IOCBNbits.IOCBN4 = 1;
-    IOCBFbits.IOCBF4 = 0;
-    INTCONbits.IOCIF = 0;
-    INTCONbits.IOCIE = 1;
+    //    IOCBPbits.IOCBP4 = 0;
+    //    IOCBNbits.IOCBN4 = 1;
+    //    IOCBFbits.IOCBF4 = 0;
+    //    INTCONbits.IOCIF = 0;
+    //    INTCONbits.IOCIE = 1;
     INTCONbits.PEIE = 1;
     INTCONbits.GIE = 1;
 }
@@ -103,21 +103,25 @@ unsigned char EEPROM_Read(unsigned char addr) {
     return EEDATL;
 }
 
-unsigned int Apply_offset(unsigned int data_vol, unsigned int offset) 
-{
+unsigned int Apply_offset(unsigned char data_vol, unsigned char offset) {
     unsigned int span;
     unsigned int value;
-    
-    if (data_vol <= 2) return 0;
-    if (data_vol >= 255) return 255;
-    
-    span = 255 - offset;
-    
-    value = offset + (((unsigned int)(data_vol - 2) * span) >> 8);
-    
-    if (value > 255) value = 255;
 
-    return (unsigned char)value;
+    if (data_vol <= 2) return 0;
+//    if (data_vol >= 255) return 255;
+//
+//    span = 255 - offset;
+//
+//    value = offset + (((unsigned int) (data_vol - 2) * span) >> 8);
+
+//    if (value > 255) value = 255;
+    
+    if(data_vol < offset){
+        return offset;
+    }
+
+//    return (unsigned char) value;
+    return data_vol;
 
 }
 
@@ -167,13 +171,13 @@ void USART_Init(void) {
 
 void __interrupt() isr(void) {
 
-    if (INTCONbits.IOCIF) {
-        if (IOCBFbits.IOCBF4) {
-            save_request = 1;
-            IOCBFbits.IOCBF4 = 0;
-        }
-        INTCONbits.IOCIF = 0;
-    }
+//        if (INTCONbits.IOCIF) {
+//            if (IOCBFbits.IOCBF4) {
+//                save_request = 1;
+//                IOCBFbits.IOCBF4 = 0;
+//            }
+//            INTCONbits.IOCIF = 0;
+//        }
 
     if (!PIR1bits.RCIF) {
         LATCbits.LATC3 = 0;
@@ -182,8 +186,8 @@ void __interrupt() isr(void) {
     if (RCSTAbits.OERR) {
         RCSTAbits.CREN = 0;
         RCSTAbits.CREN = 1;
-        dmx_count = 0;
-        return;
+//        dmx_count = 0;
+//        return;
     }
 
     if (RCSTAbits.FERR) {
@@ -212,28 +216,51 @@ void __interrupt() isr(void) {
 
 void main(void) {
     Pin_Init();
-    USART_Init();
     PWM_Init();
+    USART_Init();
+
     unsigned char stored_offset[4];
     unsigned char write_val[4];
 
     for (char i = 0; i < 4; i++) {
-        stored_offset[i] = EEPROM_Read(i);
+        //        stored_offset[i] = EEPROM_Read(i);
+        stored_offset[i] = 20;
     }
 
     while (1) {
-        if (save_request) {
-            save_request = 0;
+        //        if (save_request) {
+        //            save_request = 0;
+        //
+        //            for (unsigned char i = 0; i < 4; i++) {
+        //                EEPROM_Write(i, dimmer[i]);
+        //                stored_offset[i] = dimmer[i];
+        //            }
+        //        }
 
-            for (unsigned char i = 0; i < 4; i++) {
-                EEPROM_Write(i, dimmer[i]);
-                stored_offset[i] = dimmer[i];
-            }
-        }
+//        unsigned char d0, d1, d2, d3;
 
-        for (unsigned char i = 0; i < 4; i++) {
-            write_val[i] = Apply_offset(dimmer[i], stored_offset[i]);
-            pwm_apply(i, write_val[i]);
-        }
+
+//        INTCONbits.GIE = 0;
+//        d0 = dimmer[0];
+//        d1 = dimmer[1];
+//        d2 = dimmer[2];
+//        d3 = dimmer[3];
+//        INTCONbits.GIE = 1;
+//
+//        pwm_apply(0, Apply_offset(d0, 20));
+//        pwm_apply(1, Apply_offset(d1, 20));
+//        pwm_apply(2, Apply_offset(d2, 20));
+//        pwm_apply(3, Apply_offset(d3, 20));
+
+        //        for (unsigned char i = 0; i < 4; i++) {
+        //            write_val[i] = Apply_offset(dimmer[i], stored_offset[i]);
+        //            pwm_apply(i, write_val[i]);
+        //        }
+        //    }
+        
+        pwm_apply(0, Apply_offset(dimmer[0], 20));
+        pwm_apply(1, Apply_offset(dimmer[1], 20));
+        pwm_apply(2, Apply_offset(dimmer[2], 20));
+        pwm_apply(3, Apply_offset(dimmer[3], 20));
     }
 }
