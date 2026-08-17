@@ -313,7 +313,7 @@ void main(void) {
             save_request = 0;
 
             for (unsigned char i = 0; i < 4; i++) {
-                //EEPROM_Write(i, dimmer[i]);
+                EEPROM_Write(i, dimmer[i]);
                 stored_offset[i] = dimmer[i];
             }
         }
