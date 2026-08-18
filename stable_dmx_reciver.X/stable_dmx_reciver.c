@@ -97,7 +97,7 @@ void PWM_Init(void) {
 
     T2CONbits.T2CKPS = 0b10; //prescaler 1:16
     T2CONbits.TMR2ON = 1; //Timer2 ON
-    PR2 = 124; // 1kHz
+    PR2 = 249; // 1kHz
 
     CCP1CON = 0b00001100; //CCP1 PWM mode
     CCP2CON = 0b00001100; //CCP2 PWM mode
@@ -152,10 +152,11 @@ unsigned int Apply_offset(unsigned char data_vol, unsigned char offset) {
 void pwm_apply(unsigned char i, unsigned char data) {
     unsigned int duty;
 
-    duty = ((unsigned int) data << 1) - (data >> 5);
+    duty = ((unsigned int) data << 2) - (data >> 6);
+    //duty = ((unsigned long)data * 999UL) / 255UL;
 
-    if (duty >= 500) {
-        duty = 499;
+    if (duty >= 999) {
+        duty = 999;
     }
 
     switch (i) {
