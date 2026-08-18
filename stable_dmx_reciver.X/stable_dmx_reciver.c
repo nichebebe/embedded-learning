@@ -1,5 +1,5 @@
 /*
- * File:   dimmer_algorithm_01.c
+ * File:   stable_dmx_reciver.c
  * Author: os_r_
  *
  * Created on August 7, 2026, 8:44 AM
@@ -80,6 +80,7 @@ void Pin_Init(void) {
 }
 
 void PWM_Init(void) {
+//    OSCCON = 0b01110010; //8MHz
     OSCCON = 0b01111010; //16MHz
 
     TRISAbits.TRISA5 = 1;
@@ -185,6 +186,7 @@ void USART_Init(void) {
     TXSTAbits.BRGH = 1;
     BAUDCONbits.BRG16 = 1;
 
+//    SPBRG = 7;
     SPBRG = 15;
     SPBRGH = 0;
 
@@ -229,7 +231,7 @@ void __interrupt() isr(void) {
 
             // LATCbits.LATC3 = 0;
             LATAbits.LATA1 = 0;
-
+//            LATCbits.LATC3 = 0; //
             return;
         }
 

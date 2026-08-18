@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=dimmer_algorithm_01.X
+PROJECTNAME=stable_dmx_reciver.X
 
 # Active Configuration
 DEFAULTCONF=default
