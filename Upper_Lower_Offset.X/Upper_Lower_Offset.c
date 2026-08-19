@@ -1,9 +1,10 @@
 /*
- * File:   stable_dmx_receiver.c
+ * File:   Upper_Lower_Offset.c
  * Author: os_r_
  *
- * Created on August 7, 2026, 8:44 AM
+ * Created on August 18, 2026, 12:30 PM
  */
+
 
 #include <xc.h>
 
@@ -28,6 +29,10 @@ unsigned int my_address[4] = {1, 2, 3, 4};
 volatile unsigned char dimmer[4];
 unsigned char dummy;
 unsigned char start_code;
+unsigned char stored_lower_offset[4];
+unsigned char stored_upper_offset[4];
+volatile unsigned char lower_offset[4];
+volatile unsigned char upper_offset[4];
 volatile unsigned char save_request = 0;
 volatile unsigned char valid_frame_count = 0;
 volatile unsigned char dmx_ready = 0;
@@ -131,21 +136,23 @@ unsigned char EEPROM_Read(unsigned char addr) {
     return EEDATL;
 }
 
-unsigned int Apply_offset(unsigned char data_vol, unsigned char offset) {
+unsigned int Apply_offset(unsigned char data_vol,
+                          unsigned char min,
+                          unsigned char max)
+{
     unsigned int span;
     unsigned int value;
 
     if (data_vol <= 2) return 0;
-    if (data_vol >= 255) return 255;
+    if(max <= min){
+        return 0;
+    }
+    
+    span = max - min;
 
-    span = 255 - offset;
-
-    value = offset + (((unsigned int) (data_vol - 2) * span) >> 8);
-
-    if (value > 255) value = 255;
+    value = min + ((unsigned int) (data_vol - 1) * span) / 254 ;
 
     return (unsigned char) gammaTable[value];
-
 }
 
 void pwm_apply(unsigned char i, unsigned char data) {
@@ -302,12 +309,20 @@ void main(void) {
     PWM_Init();
     USART_Init();
 
-    unsigned char stored_offset[4];
     unsigned char write_val[4];
 
     for (char i = 0; i < 4; i++) {
-        stored_offset[i] = EEPROM_Read(i);
-
+        stored_lower_offset[i] = EEPROM_Read(i);
+        stored_upper_offset[i] = EEPROM_Read(i + 4);
+        
+        if(stored_lower_offset[i] == 0xFF){
+            stored_lower_offset[i] = 0;
+        }
+        
+        if(stored_upper_offset[i] <= stored_lower_offset[i]){
+            stored_lower_offset[i] = 0;
+            stored_upper_offset[i] = 255;
+        }
     }
 
     while (1) {
@@ -315,15 +330,26 @@ void main(void) {
             save_request = 0;
 
             for (unsigned char i = 0; i < 4; i++) {
-                EEPROM_Write(i, dimmer[i]);
-                stored_offset[i] = dimmer[i];
+                //lower offset
+                if(dimmer[i] <= 102){
+                    lower_offset[i] = dimmer[i];
+                    EEPROM_Write(i, lower_offset[i]);
+                    stored_lower_offset[i] = lower_offset[i];
+                }
+                
+                //upper offset
+                if(dimmer[i] >= 153){
+                    upper_offset[i] = dimmer[i];
+                    EEPROM_Write(i + 4, upper_offset[i]);
+                    stored_upper_offset[i] = upper_offset[i];
+                }
             }
         }
 
         if (dmx_ready) {
             for (unsigned char i = 0; i < 4; i++) {
 
-                write_val[i] = Apply_offset(dimmer[i], stored_offset[i]);
+                write_val[i] = Apply_offset(dimmer[i], stored_lower_offset[i], stored_upper_offset[i]);
                 pwm_apply(i, write_val[i]);
             }
         } else {
