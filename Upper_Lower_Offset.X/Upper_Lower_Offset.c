@@ -150,7 +150,7 @@ unsigned int Apply_offset(unsigned char data_vol,
     
     span = max - min;
 
-    value = min + ((unsigned int) (data_vol - 1) * span) / 254 ;
+    value = min + ((unsigned int) (data_vol - 3) * span) / 252 ;
 
     return (unsigned char) gammaTable[value];
 }
