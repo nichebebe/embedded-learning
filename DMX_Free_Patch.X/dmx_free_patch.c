@@ -26,10 +26,17 @@
 #define ENC_B  PORTBbits.RB2
 
 unsigned char current_state;
-unsigned int direction = 0x00;
+unsigned int direction = 1;
 unsigned char encoder_ready = 1;
 volatile unsigned long system_ms = 0;
 unsigned long sw_change_time;
+unsigned char str1[] = "DMX ADDR :";
+unsigned char str2[] = "World";
+unsigned char eep_addr_min_offset = 0;
+unsigned char eep_addr_max_offset = 4;
+unsigned char eep_addr_dmx_address = 8;
+unsigned const char lcd_line[8] = {0x80, 0x8B, 0xC0, 0xCB, 0x94, 0x9F, 0xD4, 0xDF};
+unsigned int stored_address[4];
 
 void Pin_Init(void) {
     OSCCON = 0b01111010;
@@ -47,7 +54,10 @@ void Pin_Init(void) {
     INTCONbits.GIE = 1;
     TMR0 = 6;
 
-
+    TRISAbits.TRISA0 = 0; //RS
+    TRISAbits.TRISA1 = 0; //R/W
+    TRISAbits.TRISA3 = 0; //E
+    TRISA &= 0x0F;
     TRISBbits.TRISB3 = 1; //encoder SW
     TRISBbits.TRISB1 = 1; //encoder A
     TRISBbits.TRISB2 = 1; //encoder B
@@ -65,6 +75,120 @@ void Pin_Init(void) {
 
 }
 
+void lcd_send_nibble(unsigned char nibble) {
+    LATA &= 0x0F;
+    LATA |= (nibble << 4);
+
+    LATAbits.LATA3 = 1;
+    __delay_us(1);
+    LATAbits.LATA3 = 0;
+}
+
+unsigned char lcd_read_busy(void) {
+    unsigned char busy;
+    TRISA |= 0xF0; //RA4-7 input
+
+    LATAbits.LATA0 = 0; //RS=0
+    LATAbits.LATA1 = 1; //R/W read mode
+
+    LATAbits.LATA3 = 1; //E=1
+    __delay_us(1);
+    busy = PORTAbits.RA7;
+    LATAbits.LATA3 = 0; //E=0
+
+    LATAbits.LATA3 = 1; //E=1
+    __delay_us(1);
+    LATAbits.LATA3 = 0; //E=0
+
+    LATAbits.LATA1 = 0; //R/W write mode
+    TRISA &= 0x0F; //RA4-7 output
+
+    return busy;
+}
+
+void lcd_wait_busy(void) {
+    while (lcd_read_busy()) {
+    }
+}
+
+void lcd_cmd(unsigned char cmd) {
+
+    LATAbits.LATA0 = 0; //RS=0
+    LATAbits.LATA1 = 0; //R/W write mode
+
+    lcd_send_nibble(cmd >> 4);
+    lcd_send_nibble(cmd & 0x0F);
+    lcd_wait_busy();
+    //    __delay_ms(2);
+}
+
+void lcd_cmd_no_busy(unsigned char cmd) {
+    LATAbits.LATA0 = 0; //RS=0
+
+    lcd_send_nibble(cmd >> 4);
+    lcd_send_nibble(cmd & 0x0F);
+}
+
+void lcd_data(unsigned char data) {
+    LATAbits.LATA0 = 1; //RS=1
+    LATAbits.LATA1 = 0; //R/W write mode
+
+    lcd_send_nibble(data >> 4);
+    lcd_send_nibble(data & 0x0F);
+
+    lcd_wait_busy();
+    //    __delay_ms(50);
+}
+
+void lcd_init(void) {
+    __delay_ms(50);
+    LATAbits.LATA0 = 0; //RS=0
+    LATAbits.LATA1 = 0; //R/W write mode
+    LATAbits.LATA3 = 0; //E=0
+    lcd_send_nibble(0x03);
+    __delay_ms(5);
+    lcd_send_nibble(0x03);
+    __delay_us(150);
+    lcd_send_nibble(0x03); //0011
+    __delay_us(150);
+    lcd_send_nibble(0x02); //0010 4bit mode
+    __delay_us(150);
+    lcd_cmd(0x28); //4bit, 2-line, 5*8
+    __delay_us(40);
+    lcd_cmd(0x0F); //Display ON, cursor ON
+    __delay_us(40);
+    lcd_cmd(0x01); //clear
+    __delay_ms(2);
+    lcd_cmd(0x06); //entry mode
+}
+
+void EEPROM_Write(unsigned char addr, unsigned char data) {
+    EEADRL = addr;
+    EEDATL = data;
+    EECON1bits.CFGS = 0;
+    EECON1bits.EEPGD = 0;
+    EECON1bits.WREN = 1;
+
+    INTCONbits.GIE = 0;
+    EECON2 = 0x55;
+    EECON2 = 0xAA;
+    EECON1bits.WR = 1;
+
+    while (EECON1bits.WR);
+
+    EECON1bits.WREN = 0;
+    INTCONbits.GIE = 1;
+}
+
+unsigned char EEPROM_Read(unsigned char addr) {
+    EEADRL = addr;
+    EECON1bits.CFGS = 0;
+    EECON1bits.EEPGD = 0;
+    EECON1bits.RD = 1;
+
+    return EEDATL;
+}
+
 void __interrupt() _isr(void) {
     if (INTCONbits.T0IF) {
         TMR0 = 6;
@@ -75,8 +199,6 @@ void __interrupt() _isr(void) {
 }
 
 void main(void) {
-
-    Pin_Init();
     unsigned char sw_raw = 1;
     unsigned char sw_last = 1;
     unsigned char sw_stable = 1;
@@ -84,23 +206,44 @@ void main(void) {
     unsigned char enc_new;
     unsigned char transition;
     signed char encoder_step = 0;
+    unsigned char save_request = 0;
+    unsigned char addr_high;
+    unsigned char addr_low;
+    unsigned char output_no = 0;
+    unsigned char i = 0;
+    unsigned char lcd_update_request = 0;
+
+    Pin_Init();
+    lcd_init();
+
+    for (unsigned char i = 0; i < 4; i++) {
+        addr_high = EEPROM_Read(eep_addr_dmx_address + (i * 2));
+        addr_low = EEPROM_Read(eep_addr_dmx_address + (i * 2) + 1);
+        stored_address[i] = ((unsigned int) addr_high << 8) | addr_low;
+
+        if (stored_address[i] < 1 || stored_address[i] > 512) {
+            stored_address[i] = i + 1;
+        }
+    }
+    
+    direction = stored_address[0];
+    
+    for (unsigned char ch = 0; ch < 4; ch++) {
+        lcd_cmd(lcd_line[ch * 2]);
+
+        for (unsigned char j = 0; str1[j] != '\0'; j++) {
+            lcd_data(str1[j]);
+        }
+
+        lcd_cmd(lcd_line[ch * 2 + 1]);
+        
+        lcd_data((unsigned char) ((stored_address[ch] / 100) + '0'));
+        lcd_data((unsigned char) (((stored_address[ch] / 10) % 10) + '0'));
+        lcd_data((unsigned char) ((stored_address[ch] % 10) + '0'));
+    }
+    
 
     while (1) {
-
-
-        //        current_state = (ENC_A << 1) | ENC_B;
-        //        if (encoder_ready) {
-        //            if (current_state == 1) {
-        //                direction++;
-        //                encoder_ready = 0;
-        //            } else if (current_state == 2) {
-        //                direction--;
-        //                encoder_ready = 0;
-        //            }
-        //        }
-        //        if (current_state == 3) {
-        //            encoder_ready = 1;
-        //        }
 
         enc_new = (ENC_A << 1) | ENC_B;
         if (enc_new != enc_old) {
@@ -113,7 +256,10 @@ void main(void) {
                 case 0b0111:
                     encoder_step--;
                     if (encoder_step <= -4) {
-                        direction--;
+                        if (direction > 1) {
+                            direction--;
+                            lcd_update_request = 1;
+                        }
                         encoder_step = 0;
                     }
                     break;
@@ -123,8 +269,11 @@ void main(void) {
                 case 0b0010:
                 case 0b1011:
                     encoder_step++;
-                    if (encoder_step >= +4) {
-                        direction++;
+                    if (encoder_step >= 4) {
+                        if (direction < 512) {
+                            direction++;
+                            lcd_update_request = 1;
+                        }
                         encoder_step = 0;
                     }
                     break;
@@ -151,21 +300,43 @@ void main(void) {
                 sw_stable = sw_raw;
 
                 if (sw_stable == 0) {
-                    direction = 0;
+                    save_request = 1;
                 }
             }
         }
 
-        //        if(sw_ready && ENC_SW == 0){
-        //            sw_ready = 0;
-        //            direction = 0;
-        //        }
+        if (lcd_update_request) {
+            lcd_update_request = 0;
+            lcd_cmd(lcd_line[output_no * 2 + 1]);
 
-        LATCbits.LATC3 = direction >> 4 & 0x01; //LED1 LOW
-        LATBbits.LATB0 = direction >> 3 & 0x01; //LED4 LOW
-        LATBbits.LATB5 = direction >> 2 & 0x01; //LED3 LOW
-        LATCbits.LATC1 = direction >> 1 & 0x01; //LED2 LOW
-        LATCbits.LATC2 = direction & 0x01; //LED1 LOW
+            lcd_data((unsigned char) ((direction / 100) + '0'));
+            lcd_data((unsigned char) (((direction / 10) % 10) + '0'));
+            lcd_data((unsigned char) ((direction % 10) + '0'));
 
+            lcd_cmd(lcd_line[output_no * 2 + 1]);
+        }
+
+        if (save_request) {
+
+            stored_address[output_no] = direction;
+            addr_high = stored_address[output_no] >> 8;
+            addr_low = stored_address[output_no] & 0xFF;
+
+            EEPROM_Write((eep_addr_dmx_address + (output_no * 2)), addr_high);
+            EEPROM_Write((eep_addr_dmx_address + (output_no * 2) + 1), addr_low);
+
+            output_no++;
+
+            if (output_no >= 4) {
+                output_no = 0;
+            }
+
+            direction = stored_address[output_no];
+
+            lcd_update_request = 1;
+            
+            save_request = 0;
+
+        }
     }
 }
