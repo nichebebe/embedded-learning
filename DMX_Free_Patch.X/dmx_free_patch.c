@@ -25,16 +25,16 @@
 #define ENC_A  PORTBbits.RB1
 #define ENC_B  PORTBbits.RB2
 
+#define EEPROM_MIN_OFFSET_ADDR  0
+#define EEPROM_MAX_OFFSET_ADDR  4
+#define EEPROM_DMX_ADDR_BASE    8
+
 unsigned char current_state;
-unsigned int direction = 1;
+unsigned int edit_address = 1;
 unsigned char encoder_ready = 1;
 volatile unsigned long system_ms = 0;
 unsigned long sw_change_time;
-unsigned char str1[] = "DMX ADDR :";
-unsigned char str2[] = "World";
-unsigned char eep_addr_min_offset = 0;
-unsigned char eep_addr_max_offset = 4;
-unsigned char eep_addr_dmx_address = 8;
+unsigned char dmx_addr_text[] = "DMX ADDR :";
 unsigned const char lcd_line[8] = {0x80, 0x8B, 0xC0, 0xCB, 0x94, 0x9F, 0xD4, 0xDF};
 unsigned int stored_address[4];
 
@@ -209,7 +209,7 @@ void main(void) {
     unsigned char save_request = 0;
     unsigned char addr_high;
     unsigned char addr_low;
-    unsigned char output_no = 0;
+    unsigned char output_index = 0;
     unsigned char i = 0;
     unsigned char lcd_update_request = 0;
 
@@ -217,8 +217,8 @@ void main(void) {
     lcd_init();
 
     for (unsigned char i = 0; i < 4; i++) {
-        addr_high = EEPROM_Read(eep_addr_dmx_address + (i * 2));
-        addr_low = EEPROM_Read(eep_addr_dmx_address + (i * 2) + 1);
+        addr_high = EEPROM_Read(EEPROM_DMX_ADDR_BASE + (i * 2));
+        addr_low = EEPROM_Read(EEPROM_DMX_ADDR_BASE + (i * 2) + 1);
         stored_address[i] = ((unsigned int) addr_high << 8) | addr_low;
 
         if (stored_address[i] < 1 || stored_address[i] > 512) {
@@ -226,13 +226,13 @@ void main(void) {
         }
     }
     
-    direction = stored_address[0];
+    edit_address = stored_address[0];
     
     for (unsigned char ch = 0; ch < 4; ch++) {
         lcd_cmd(lcd_line[ch * 2]);
 
-        for (unsigned char j = 0; str1[j] != '\0'; j++) {
-            lcd_data(str1[j]);
+        for (unsigned char j = 0; dmx_addr_text[j] != '\0'; j++) {
+            lcd_data(dmx_addr_text[j]);
         }
 
         lcd_cmd(lcd_line[ch * 2 + 1]);
@@ -256,8 +256,8 @@ void main(void) {
                 case 0b0111:
                     encoder_step--;
                     if (encoder_step <= -4) {
-                        if (direction > 1) {
-                            direction--;
+                        if (edit_address > 1) {
+                            edit_address--;
                             lcd_update_request = 1;
                         }
                         encoder_step = 0;
@@ -270,8 +270,8 @@ void main(void) {
                 case 0b1011:
                     encoder_step++;
                     if (encoder_step >= 4) {
-                        if (direction < 512) {
-                            direction++;
+                        if (edit_address < 512) {
+                            edit_address++;
                             lcd_update_request = 1;
                         }
                         encoder_step = 0;
@@ -307,31 +307,31 @@ void main(void) {
 
         if (lcd_update_request) {
             lcd_update_request = 0;
-            lcd_cmd(lcd_line[output_no * 2 + 1]);
+            lcd_cmd(lcd_line[output_index * 2 + 1]);
 
-            lcd_data((unsigned char) ((direction / 100) + '0'));
-            lcd_data((unsigned char) (((direction / 10) % 10) + '0'));
-            lcd_data((unsigned char) ((direction % 10) + '0'));
+            lcd_data((unsigned char) ((edit_address / 100) + '0'));
+            lcd_data((unsigned char) (((edit_address / 10) % 10) + '0'));
+            lcd_data((unsigned char) ((edit_address % 10) + '0'));
 
-            lcd_cmd(lcd_line[output_no * 2 + 1]);
+            lcd_cmd(lcd_line[output_index * 2 + 1]);
         }
 
         if (save_request) {
 
-            stored_address[output_no] = direction;
-            addr_high = stored_address[output_no] >> 8;
-            addr_low = stored_address[output_no] & 0xFF;
+            stored_address[output_index] = edit_address;
+            addr_high = stored_address[output_index] >> 8;
+            addr_low = stored_address[output_index] & 0xFF;
 
-            EEPROM_Write((eep_addr_dmx_address + (output_no * 2)), addr_high);
-            EEPROM_Write((eep_addr_dmx_address + (output_no * 2) + 1), addr_low);
+            EEPROM_Write((EEPROM_DMX_ADDR_BASE + (output_index * 2)), addr_high);
+            EEPROM_Write((EEPROM_DMX_ADDR_BASE + (output_index * 2) + 1), addr_low);
 
-            output_no++;
+            output_index++;
 
-            if (output_no >= 4) {
-                output_no = 0;
+            if (output_index >= 4) {
+                output_index = 0;
             }
 
-            direction = stored_address[output_no];
+            edit_address = stored_address[output_index];
 
             lcd_update_request = 1;
             
