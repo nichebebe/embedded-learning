@@ -34,7 +34,7 @@ unsigned int edit_address = 1;
 unsigned char encoder_ready = 1;
 volatile unsigned long system_ms = 0;
 unsigned long sw_change_time;
-unsigned char dmx_addr_text[] = "DMX ADDR :";
+unsigned char dmx_addr_text[] = "ch ADDR :";
 unsigned const char lcd_line[8] = {0x80, 0x8B, 0xC0, 0xCB, 0x94, 0x9F, 0xD4, 0xDF};
 unsigned int stored_address[4];
 unsigned long last_encoder_time = 0;
@@ -233,6 +233,8 @@ void main(void) {
 
     for (unsigned char ch = 0; ch < 4; ch++) {
         lcd_cmd(lcd_line[ch * 2]);
+        
+        lcd_data((unsigned char)((ch + 1) + '0'));
 
         for (unsigned char j = 0; dmx_addr_text[j] != '\0'; j++) {
             lcd_data(dmx_addr_text[j]);

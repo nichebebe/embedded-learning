@@ -84,7 +84,7 @@ void Pin_Init(void) {
 }
 
 void PWM_Init(void) {
-//    OSCCON = 0b01110010; //8MHz
+    //    OSCCON = 0b01110010; //8MHz
     OSCCON = 0b01111010; //16MHz
 
     TRISAbits.TRISA5 = 1;
@@ -137,20 +137,19 @@ unsigned char EEPROM_Read(unsigned char addr) {
 }
 
 unsigned int Apply_offset(unsigned char data_vol,
-                          unsigned char min,
-                          unsigned char max)
-{
+        unsigned char min,
+        unsigned char max) {
     unsigned int span;
     unsigned int value;
 
     if (data_vol <= 2) return 0;
-    if(max <= min){
+    if (max <= min) {
         return 0;
     }
-    
+
     span = max - min;
 
-    value = min + ((unsigned int) (data_vol - 3) * span) / 252 ;
+    value = min + ((unsigned int) (data_vol - 3) * span) / 252;
 
     return (unsigned char) gammaTable[value];
 }
@@ -159,7 +158,7 @@ void pwm_apply(unsigned char i, unsigned char data) {
     unsigned int duty;
 
     duty = ((unsigned int) data << 2) - (data >> 6);
-//    duty = ((unsigned long)data * 999UL) / 255UL;
+    //    duty = ((unsigned long)data * 999UL) / 255UL;
 
     if (duty >= 999) {
         duty = 999;
@@ -193,7 +192,7 @@ void USART_Init(void) {
     TXSTAbits.BRGH = 1;
     BAUDCONbits.BRG16 = 1;
 
-//    SPBRG = 7;
+    //    SPBRG = 7;
     SPBRG = 15;
     SPBRGH = 0;
 
@@ -238,7 +237,7 @@ void __interrupt() isr(void) {
 
             // LATCbits.LATC3 = 0;
             LATAbits.LATA1 = 0;
-//            LATCbits.LATC3 = 0; //
+            //            LATCbits.LATC3 = 0; //
             return;
         }
 
@@ -314,12 +313,12 @@ void main(void) {
     for (char i = 0; i < 4; i++) {
         stored_lower_offset[i] = EEPROM_Read(i);
         stored_upper_offset[i] = EEPROM_Read(i + 4);
-        
-        if(stored_lower_offset[i] == 0xFF){
+
+        if (stored_lower_offset[i] == 0xFF) {
             stored_lower_offset[i] = 0;
         }
-        
-        if(stored_upper_offset[i] <= stored_lower_offset[i]){
+
+        if (stored_upper_offset[i] <= stored_lower_offset[i]) {
             stored_lower_offset[i] = 0;
             stored_upper_offset[i] = 255;
         }
@@ -331,14 +330,14 @@ void main(void) {
 
             for (unsigned char i = 0; i < 4; i++) {
                 //lower offset
-                if(dimmer[i] <= 102){
+                if (dimmer[i] <= 102) {
                     lower_offset[i] = dimmer[i];
                     EEPROM_Write(i, lower_offset[i]);
                     stored_lower_offset[i] = lower_offset[i];
                 }
-                
+
                 //upper offset
-                if(dimmer[i] >= 153){
+                if (dimmer[i] >= 153) {
                     upper_offset[i] = dimmer[i];
                     EEPROM_Write(i + 4, upper_offset[i]);
                     stored_upper_offset[i] = upper_offset[i];
