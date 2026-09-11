@@ -37,6 +37,9 @@ unsigned long sw_change_time;
 unsigned char dmx_addr_text[] = "DMX ADDR :";
 unsigned const char lcd_line[8] = {0x80, 0x8B, 0xC0, 0xCB, 0x94, 0x9F, 0xD4, 0xDF};
 unsigned int stored_address[4];
+unsigned long last_encoder_time = 0;
+unsigned long encoder_interval;
+unsigned int encoder_increment = 1;
 
 void Pin_Init(void) {
     OSCCON = 0b01111010;
@@ -225,9 +228,9 @@ void main(void) {
             stored_address[i] = i + 1;
         }
     }
-    
+
     edit_address = stored_address[0];
-    
+
     for (unsigned char ch = 0; ch < 4; ch++) {
         lcd_cmd(lcd_line[ch * 2]);
 
@@ -236,12 +239,12 @@ void main(void) {
         }
 
         lcd_cmd(lcd_line[ch * 2 + 1]);
-        
+
         lcd_data((unsigned char) ((stored_address[ch] / 100) + '0'));
         lcd_data((unsigned char) (((stored_address[ch] / 10) % 10) + '0'));
         lcd_data((unsigned char) ((stored_address[ch] % 10) + '0'));
     }
-    
+
 
     while (1) {
 
@@ -256,10 +259,24 @@ void main(void) {
                 case 0b0111:
                     encoder_step--;
                     if (encoder_step <= -4) {
-                        if (edit_address > 1) {
-                            edit_address--;
-                            lcd_update_request = 1;
+                        encoder_interval = system_ms - last_encoder_time;
+                        last_encoder_time = system_ms;
+
+                        if (encoder_interval < 40) {
+                            encoder_increment = 20;
+                        } else if (encoder_interval < 100) {
+                            encoder_increment = 5;
+                        } else {
+                            encoder_increment = 1;
                         }
+
+                        if (edit_address <= encoder_increment) {
+                            edit_address = 512;
+                        } else {
+                            edit_address -= encoder_increment;
+                        }
+
+                        lcd_update_request = 1;
                         encoder_step = 0;
                     }
                     break;
@@ -270,12 +287,26 @@ void main(void) {
                 case 0b1011:
                     encoder_step++;
                     if (encoder_step >= 4) {
-                        if (edit_address < 512) {
-                            edit_address++;
-                            lcd_update_request = 1;
+                        encoder_interval = system_ms - last_encoder_time;
+                        last_encoder_time = system_ms;
+                        if (encoder_interval < 40) {
+                            encoder_increment = 20;
+                        } else if (encoder_interval < 100) {
+                            encoder_increment = 5;
+                        } else {
+                            encoder_increment = 1;
                         }
+
+                        if (edit_address + encoder_increment > 512) {
+                            edit_address = 1;
+                        } else {
+                            edit_address += encoder_increment;
+                        }
+
+                        lcd_update_request = 1;
                         encoder_step = 0;
                     }
+
                     break;
 
                 default:
@@ -334,7 +365,7 @@ void main(void) {
             edit_address = stored_address[output_index];
 
             lcd_update_request = 1;
-            
+
             save_request = 0;
 
         }
