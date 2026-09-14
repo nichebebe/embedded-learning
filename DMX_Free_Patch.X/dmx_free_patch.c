@@ -58,6 +58,7 @@ volatile unsigned char valid_frame_count = 0;
 volatile unsigned char dmx_ready = 0;
 volatile unsigned char dmx_state = DMX_WAIT_BREAK;
 unsigned int highest_address;
+unsigned int dmx_loss_ms = 0;
 
 const unsigned char gammaTable[256] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -335,6 +336,10 @@ void __interrupt() isr(void) {
         TMR0 = 6;
         system_ms++;
 
+        if(dmx_loss_ms < 1000){
+            dmx_loss_ms++;
+        }
+        
         INTCONbits.T0IF = 0;
     }
 
@@ -407,11 +412,14 @@ void __interrupt() isr(void) {
 
                 if (dmx_count == stored_address[0]) {
                     dimmer[0] = data;
-                } else if (dmx_count == stored_address[1]) {
+                } 
+                if (dmx_count == stored_address[1]) {
                     dimmer[1] = data;
-                } else if (dmx_count == stored_address[2]) {
+                }
+                if (dmx_count == stored_address[2]) {
                     dimmer[2] = data;
-                } else if (dmx_count == stored_address[3]) {
+                }
+                if (dmx_count == stored_address[3]) {
                     dimmer[3] = data;
                 }
                 //                for (unsigned char i = 0; i < 4; i++) {
@@ -422,6 +430,8 @@ void __interrupt() isr(void) {
 
                 if (dmx_count >= highest_address) {
 
+                    dmx_loss_ms = 0;
+                    
                     if (valid_frame_count < 3) {
                         valid_frame_count++;
                     }
@@ -545,9 +555,13 @@ void main(void) {
             }
         }
 
+        if(dmx_loss_ms >= 500){
+            dmx_ready = 0;
+        }
+        
         if (dmx_ready) {
             
-            LATCbits.LATC3 = 0;
+            LATCbits.LATC3 = 1;
             
             for (unsigned char i = 0; i < 4; i++) {
 
@@ -556,7 +570,7 @@ void main(void) {
             }
         } else {
             
-            LATCbits.LATC3 = 1;
+            LATCbits.LATC3 = 0;
             
             for (unsigned char i = 0; i < 4; i++) {
                 pwm_apply(i, 0);
