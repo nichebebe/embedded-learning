@@ -10,11 +10,11 @@
 
 #define _XTAL_FREQ 20000000
 #define PHASE_MAX_TICKS 37500UL
-#define GATE_PULSE_TICKS 1000UL
+#define GATE_HOLD_END_TICKS 40000UL
 
 #define PHASE_CH_COUNT 4
 #define PHASE_EVENT_MAX (PHASE_CH_COUNT * 2)
-#define PHASE_OFF_ADC 50
+#define PHASE_OFF_ADC 5
 
 static volatile uint16_t zc_rise_ticks = 0;
 static volatile uint16_t zc_fall_ticks = 0;
@@ -153,7 +153,7 @@ void Phase_Timer0_Init(void) {
 
 void __interrupt(irq(IRQ_IOC)) ZC_H11AA1_ISR(void) {
     if (IOCBFbits.IOCBF0) {
-        LATAbits.LATA5 ^= 1; 
+        LATAbits.LATA5 ^= 1;
         if (PORTBbits.RB0) {
             zc_rise_ticks = TMR1;
 
@@ -411,111 +411,9 @@ void __interrupt(irq(IRQ_TMR0)) TMR0_ISR(void) {
                 T0CON0bits.EN = 1;
             }
         }
-
-
-        //        uint16_t current_time;
-        //
-        //        current_time = phase_events[event_index].time_ticks;
-        //
-        //        while ((event_index < PHASE_EVENT_MAX) &&
-        //                (phase_events[event_index].time_ticks == current_time)) {
-        //            
-        //            if (phase_events[event_index].type == EVENT_GATE_ON) {
-        //                Phase_GateOn(phase_events[event_index].channel);
-        //            } 
-        //            else 
-        //            {
-        //                Phase_GateOff(phase_events[event_index].channel);
-        //            }
-        //            event_index++;
-        //        }
-        //        
-        //
-        //        if (event_index < PHASE_EVENT_MAX) {
-        //            uint16_t delta;
-        //
-        //            delta = phase_events[event_index].time_ticks - current_time;
-        //
-        //            preload =
-        //                    (uint16_t) (65536UL - delta);
-        //            TMR0H = (uint8_t) (preload >> 8);
-        //            TMR0L = (uint8_t) (preload & 0xFF);
-        //            T0CON0bits.EN = 1;
-        //        } 
-        //        else {
-        //            phase_state = PHASE_WAIT_ZC;
-        //            if (next_zc_pending) {
-        //
-        //                remaining_ticks =
-        //                        next_zc_target_ticks - TMR1;
-        //
-        //                preload =
-        //                        (uint16_t) (65536UL - remaining_ticks);
-        //
-        //                TMR0H = (uint8_t) (preload >> 8);
-        //                TMR0L = (uint8_t) (preload & 0xFF);
-        //
-        //                next_zc_pending = 0;
-        //
-        //                phase_state = PHASE_WAIT_ZC;
-        //
-        //                T0CON0bits.EN = 1;
     }
 }
 
-//        if (phase_delay_ticks[0] == 0) {
-//            LATDbits.LATD4 = 1;
-//            __delay_us(100);
-//            LATDbits.LATD4 = 0;
-//
-//            phase_state = PHASE_WAIT_ZC;
-//
-//        } else {
-//            preload =
-//                    (uint16_t) (65536UL - phase_delay_ticks[0]);
-//
-//            TMR0H = (uint8_t) (preload >> 8);
-//            TMR0L = (uint8_t) (preload & 0xFF);
-//
-//            phase_state = PHASE_WAIT_FIRE;
-//
-//            T0CON0bits.EN = 1;
-//        }
-//    } else if (phase_state == PHASE_WAIT_FIRE) {
-//
-//        LATDbits.LATD4 = 1;
-//        preload =
-//                (uint16_t) (65536UL - GATE_PULSE_TICKS);
-//        TMR0H = (uint8_t) (preload >> 8);
-//        TMR0L = (uint8_t) (preload & 0xFF);
-//
-//        phase_state = PHASE_GATE_ON;
-//
-//        T0CON0bits.EN = 1;
-//    } else if (phase_state == PHASE_GATE_ON) {
-//
-//        LATDbits.LATD4 = 0;
-//        phase_state = PHASE_WAIT_ZC;
-//
-//        if (next_zc_pending) {
-//
-//            remaining_ticks =
-//                    next_zc_target_ticks - TMR1;
-//
-//            preload =
-//                    (uint16_t) (65536UL - remaining_ticks);
-//
-//            TMR0H = (uint8_t) (preload >> 8);
-//            TMR0L = (uint8_t) (preload & 0xFF);
-//
-//            next_zc_pending = 0;
-//
-//            phase_state = PHASE_WAIT_ZC;
-//
-//            T0CON0bits.EN = 1;
-//        }
-//
-//    }
 
 void Phase_SetADC(uint8_t ch, uint16_t adc) {
     uint16_t new_ticks;
@@ -525,10 +423,14 @@ void Phase_SetADC(uint8_t ch, uint16_t adc) {
         return;
     }
 
-    if (adc <= PHASE_OFF_ADC) {
-        phase_enabled[ch] = 0;
-        return;
-    }
+
+
+    phase_enabled[ch] = 1;
+
+        if (adc < PHASE_OFF_ADC) {
+            phase_enabled[ch] = 0;
+            return;
+        }
 
     phase_enabled[ch] = 1;
 
@@ -540,6 +442,7 @@ void Phase_SetADC(uint8_t ch, uint16_t adc) {
     phase_delay_ticks[ch] = new_ticks;
 
     INTCON0bits.GIE = gie_state;
+
 }
 
 static void Phase_SortEvents(void) {
@@ -561,8 +464,7 @@ static void Phase_SortEvents(void) {
     }
 }
 
-static void Phase_BuildEvents(void)
-{
+static void Phase_BuildEvents(void) {
     uint8_t count = 0;
 
     for (uint8_t ch = 0; ch < PHASE_CH_COUNT; ch++) {
@@ -584,8 +486,7 @@ static void Phase_BuildEvents(void)
 
 
         // Gate OFF
-        phase_events[next_buffer][count].time_ticks =
-                phase_delay_ticks[ch] + GATE_PULSE_TICKS;
+        phase_events[next_buffer][count].time_ticks = GATE_HOLD_END_TICKS;
 
         phase_events[next_buffer][count].channel = ch;
 
