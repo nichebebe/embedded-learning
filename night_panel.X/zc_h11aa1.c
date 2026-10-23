@@ -7,6 +7,8 @@
 #include <xc.h>
 #include <stdint.h>
 #include "zc_h11aa1.h"
+#include "gamma.h"
+#include "offset.h"
 
 #define _XTAL_FREQ 20000000
 #define PHASE_MAX_TICKS 37500UL
@@ -414,27 +416,40 @@ void __interrupt(irq(IRQ_TMR0)) TMR0_ISR(void) {
     }
 }
 
-
 void Phase_SetADC(uint8_t ch, uint16_t adc) {
     uint16_t new_ticks;
+    uint16_t scaled_adc;
+    uint8_t gamma8;
     uint8_t gie_state;
 
     if (ch >= PHASE_CH_COUNT) {
         return;
     }
+    
+    if((adc >> 4) <= 2){
+        phase_enabled[ch] = 0;
+        return;
+    }
 
-
+//    if (adc < PHASE_OFF_ADC) {
+//        phase_enabled[ch] = 0;
+//        return;
+//    }
 
     phase_enabled[ch] = 1;
 
-        if (adc < PHASE_OFF_ADC) {
-            phase_enabled[ch] = 0;
-            return;
-        }
+    /********** offset rescale************/
 
-    phase_enabled[ch] = 1;
+    scaled_adc = Offset_Rescale(ch, adc);
+    
+    /********** gamma table************/
+    
+//    gamma8 = Gamma_Apply(scaled_adc);
+    gamma8 = (uint8_t)(scaled_adc >> 4);
+    
+    /********** phase delay************/
 
-    new_ticks = (uint16_t) (((uint32_t) (4095 - adc) * PHASE_MAX_TICKS) / 4095UL);
+    new_ticks = (uint16_t) (((uint32_t) (255 - gamma8) * PHASE_MAX_TICKS) / 255UL);
 
     gie_state = INTCON0bits.GIE;
     INTCON0bits.GIE = 0;
@@ -549,4 +564,48 @@ static void Phase_GateOff(uint8_t ch) {
             LATDbits.LATD7 = 0;
             break;
     }
+}
+
+void Phase_Suspend(void)
+{
+    PIE0bits.IOCIE = 0;
+    PIE3bits.TMR0IE = 0;
+    
+    T0CON0bits.EN = 0;
+    PIR3bits.TMR0IF = 0;
+    
+    LATDbits.LATD4 = 0;
+    LATDbits.LATD5 = 0;
+    LATDbits.LATD6 = 0;
+    LATDbits.LATD7 = 0;
+    
+    phase_state = PHASE_WAIT_ZC;
+    event_index = 0;
+    phase_event_ready = 0;
+    next_zc_pending = 0;
+}
+
+void Phase_Resume(void)
+{
+    zc_valid_count = 0;
+    
+    half_a_sum = 0;
+    half_b_sum = 0;
+    half_a_count = 0;
+    half_b_count = 0;
+    
+    half_phase = 0;
+    zc_calibrated = 0;
+    
+    phase_state = PHASE_WAIT_ZC;
+    event_index = 0;
+    phase_event_ready = 0;
+    next_zc_pending = 0;
+    
+    IOCBFbits.IOCBF0 = 0;
+    PIR0bits.IOCIF = 0;
+    PIR3bits.TMR0IF = 0;
+    
+    PIE0bits.IOCIE = 1;
+    PIE3bits.TMR0IE = 1;
 }

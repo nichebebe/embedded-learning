@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=pwm.c main.c zc_h11aa1.c
+SOURCEFILES_QUOTED_IF_SPACED=pwm.c main.c zc_h11aa1.c offset.c gamma.c eeprom.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/pwm.p1 ${OBJECTDIR}/main.p1 ${OBJECTDIR}/zc_h11aa1.p1
-POSSIBLE_DEPFILES=${OBJECTDIR}/pwm.p1.d ${OBJECTDIR}/main.p1.d ${OBJECTDIR}/zc_h11aa1.p1.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/pwm.p1 ${OBJECTDIR}/main.p1 ${OBJECTDIR}/zc_h11aa1.p1 ${OBJECTDIR}/offset.p1 ${OBJECTDIR}/gamma.p1 ${OBJECTDIR}/eeprom.p1
+POSSIBLE_DEPFILES=${OBJECTDIR}/pwm.p1.d ${OBJECTDIR}/main.p1.d ${OBJECTDIR}/zc_h11aa1.p1.d ${OBJECTDIR}/offset.p1.d ${OBJECTDIR}/gamma.p1.d ${OBJECTDIR}/eeprom.p1.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/pwm.p1 ${OBJECTDIR}/main.p1 ${OBJECTDIR}/zc_h11aa1.p1
+OBJECTFILES=${OBJECTDIR}/pwm.p1 ${OBJECTDIR}/main.p1 ${OBJECTDIR}/zc_h11aa1.p1 ${OBJECTDIR}/offset.p1 ${OBJECTDIR}/gamma.p1 ${OBJECTDIR}/eeprom.p1
 
 # Source Files
-SOURCEFILES=pwm.c main.c zc_h11aa1.c
+SOURCEFILES=pwm.c main.c zc_h11aa1.c offset.c gamma.c eeprom.c
 
 
 
@@ -112,6 +112,30 @@ ${OBJECTDIR}/zc_h11aa1.p1: zc_h11aa1.c  nbproject/Makefile-${CND_CONF}.mk
 	@-${MV} ${OBJECTDIR}/zc_h11aa1.d ${OBJECTDIR}/zc_h11aa1.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/zc_h11aa1.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
+${OBJECTDIR}/offset.p1: offset.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/offset.p1.d 
+	@${RM} ${OBJECTDIR}/offset.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=pickit5   -mdfp="${DFP_DIR}/xc8"  -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/offset.p1 offset.c 
+	@-${MV} ${OBJECTDIR}/offset.d ${OBJECTDIR}/offset.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/offset.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/gamma.p1: gamma.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/gamma.p1.d 
+	@${RM} ${OBJECTDIR}/gamma.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=pickit5   -mdfp="${DFP_DIR}/xc8"  -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/gamma.p1 gamma.c 
+	@-${MV} ${OBJECTDIR}/gamma.d ${OBJECTDIR}/gamma.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/gamma.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/eeprom.p1: eeprom.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/eeprom.p1.d 
+	@${RM} ${OBJECTDIR}/eeprom.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=pickit5   -mdfp="${DFP_DIR}/xc8"  -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/eeprom.p1 eeprom.c 
+	@-${MV} ${OBJECTDIR}/eeprom.d ${OBJECTDIR}/eeprom.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/eeprom.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
 else
 ${OBJECTDIR}/pwm.p1: pwm.c  nbproject/Makefile-${CND_CONF}.mk 
 	@${MKDIR} "${OBJECTDIR}" 
@@ -136,6 +160,30 @@ ${OBJECTDIR}/zc_h11aa1.p1: zc_h11aa1.c  nbproject/Makefile-${CND_CONF}.mk
 	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/zc_h11aa1.p1 zc_h11aa1.c 
 	@-${MV} ${OBJECTDIR}/zc_h11aa1.d ${OBJECTDIR}/zc_h11aa1.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/zc_h11aa1.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/offset.p1: offset.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/offset.p1.d 
+	@${RM} ${OBJECTDIR}/offset.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/offset.p1 offset.c 
+	@-${MV} ${OBJECTDIR}/offset.d ${OBJECTDIR}/offset.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/offset.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/gamma.p1: gamma.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/gamma.p1.d 
+	@${RM} ${OBJECTDIR}/gamma.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/gamma.p1 gamma.c 
+	@-${MV} ${OBJECTDIR}/gamma.d ${OBJECTDIR}/gamma.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/gamma.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/eeprom.p1: eeprom.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/eeprom.p1.d 
+	@${RM} ${OBJECTDIR}/eeprom.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/eeprom.p1 eeprom.c 
+	@-${MV} ${OBJECTDIR}/eeprom.d ${OBJECTDIR}/eeprom.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/eeprom.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
 endif
 

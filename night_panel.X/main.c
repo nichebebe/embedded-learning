@@ -10,6 +10,9 @@
 #include <stdint.h>
 #include "pwm.h"
 #include "zc_h11aa1.h"
+#include "offset.h"
+#include "gamma.h"
+#include "eeprom.h"
 
 // CONFIG1
 #pragma config FEXTOSC = HS     // External Oscillator Selection (HS (crystal oscillator) above 8 MHz)
@@ -69,6 +72,12 @@
 #define AIN_CH_4 0x03
 #define AIN_CH_5 0x04
 
+#define OFFSET_LOW_LIMIT 1638   // 40%
+#define OFFSET_HIGH_LIMIT 2457  // 60%
+
+#define EEPROM_MAGIC_ADDR 32
+#define EEPROM_MAGIC_VALUE 0xA5
+
 #define _XTAL_FREQ 20000000
 
 volatile uint16_t adc_value;
@@ -76,26 +85,25 @@ volatile uint16_t phase_adc[4];
 uint16_t duty;
 volatile uint16_t debug_phase_adc0 = 0;
 volatile uint16_t debug_phase_adc1 = 0;
+static uint8_t sw_prev = 1;
+uint8_t sw_now;
+
+volatile uint16_t debug_eeprom_lower0;
+volatile uint8_t debug_ee0;
+volatile uint8_t debug_ee1;
+volatile uint8_t debug_wrerr;
 
 void PIN_Init(void) {
     ANSELBbits.ANSELB1 = 0;
     TRISBbits.TRISB1 = 1;
 
-//    ANSELDbits.ANSELD4 = 0;
-//    TRISDbits.TRISD4 = 0;
-//    
-//    // RB0 rising / falling edge detect
-//    IOCBPbits.IOCBP0 = 1;
-//    IOCBNbits.IOCBN0 = 1;
-//    
-//    //clear RB0 IOC flag
-//    IOCBFbits.IOCBF0 = 0;
-//    
-//    //enable IOC interrupt
-//    PIE0bits.IOCIE = 1;
-//    
-//    //global interrupt enable
-//    INTCON0bits.GIE = 1;
+    //Offset sw setting
+    ANSELBbits.ANSELB2 = 0; //digital
+    TRISBbits.TRISB2 = 1; //input
+    WPUBbits.WPUB2 = 1; //weak pull-up enable
+    TRISBbits.TRISB3 = 0;
+    LATBbits.LATB3 = 0;
+
 }
 
 void ADC_Init(void) {
@@ -104,19 +112,19 @@ void ADC_Init(void) {
     TRISAbits.TRISA0 = 1;
     /*ADC input channel = RA0 / ANA0 datasheet:p.749
       ADPCH = 0x00;*/
-    
+
     // RA1 = AIN2 Phase01
     ANSELAbits.ANSELA1 = 1;
     TRISAbits.TRISA1 = 1;
-    
+
     // RA2 = AIN3 Phase02
     ANSELAbits.ANSELA2 = 1;
     TRISAbits.TRISA2 = 1;
-    
+
     // RA3 = AIN3 Phase03
     ANSELAbits.ANSELA3 = 1;
     TRISAbits.TRISA3 = 1;
-    
+
     // RA4 = AIN4 Phase04
     ANSELAbits.ANSELA4 = 1;
     TRISAbits.TRISA4 = 1;
@@ -143,17 +151,17 @@ void ADC_Init(void) {
 
 uint16_t ADC_Read(uint8_t channel) {
     ADPCH = channel; //ADC channel select
-    
+
     ADCON0bits.GO = 1; //Start ADC
     while (ADCON0bits.GO); //wait GO=0
 
     return ADRES;
 }
 
-
-
 uint16_t ADC_Read_Average(uint8_t channel) {
     uint32_t total = 0;
+
+    ADC_Read(channel);
 
     for (uint8_t i = 0; i < 8; i++) {
         total += ADC_Read(channel);
@@ -173,26 +181,70 @@ void main(void) {
     Zc_Init();
     Phase_Timer0_Init();
 
+    if (EEPROM_ReadByte(EEPROM_MAGIC_ADDR) == EEPROM_MAGIC_VALUE) {
+        Offset_LoadAll();
+    }
+
     while (1) {
+        sw_now = PORTBbits.RB2;
+        offset_result_t result[4];
+        uint8_t offset_changed = 0;
+
+        if ((sw_prev == 1) && (sw_now == 0)) {
+            __delay_ms(20);
+
+            if (PORTBbits.RB2 == 0) {
+
+                offset_result_t result[4];
+                uint8_t offset_changed = 0;
+
+                for (uint8_t ch = 0; ch < 4; ch++) {
+
+                    result[ch] = Offset_SetFromADC(ch, phase_adc[ch]);
+
+                    if (result[ch] != OFFSET_NO_CHANGE) {
+                        offset_changed = 1;
+                    }
+                }
+                if (offset_changed) {
+                    Phase_Suspend();
+                    for (uint8_t ch = 0; ch < 4; ch++) {
+                        if (result[ch] == OFFSET_LOWER_CHANGED) {
+                            Offset_SaveLower(ch);
+                        } 
+                        else if (result[ch] == OFFSET_UPPER_CHANGED) {
+                            Offset_SaveUpper(ch);
+                        }
+                    }
+                    EEPROM_WriteByte(EEPROM_MAGIC_ADDR, EEPROM_MAGIC_VALUE);
+                    Phase_Resume();
+                }
+            }
+        }
+        sw_prev = sw_now;
+
+
+
 
         adc_value = ADC_Read_Average(AIN_CH_1);
         PWM_Apply(adc_value);
-        
+
         phase_adc[0] = ADC_Read_Average(AIN_CH_2);
         Phase_SetADC(0, phase_adc[0]);
-        debug_phase_adc0 = phase_adc[0];
-        
+
         phase_adc[1] = ADC_Read_Average(AIN_CH_3);
         Phase_SetADC(1, phase_adc[1]);
-        debug_phase_adc1 = phase_adc[1];
-        
+
         phase_adc[2] = ADC_Read_Average(AIN_CH_4);
         Phase_SetADC(2, phase_adc[2]);
-        
+
         phase_adc[3] = ADC_Read_Average(AIN_CH_5);
         Phase_SetADC(3, phase_adc[3]);
-        
+
         Phase_PrepareNextEvents();
+
+        //        debug_lower0 = lower_offset[0];
+        //        debug_upper0 = upper_offset[0];
     }
 }
 

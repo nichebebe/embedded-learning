@@ -17,6 +17,9 @@ static void Phase_SortEvents(void);
 void Phase_PrepareNextEvents(void);
 static void Phase_GateOn(uint8_t ch);
 static void Phase_GateOff(uint8_t ch);
+void Phase_Suspend(void);
+void Phase_Resume(void);
+
 //#ifdef	__cplusplus
 //extern "C" {
 //#endif

@@ -6,6 +6,9 @@
                    projectFiles="true">
       <itemPath>pwm.h</itemPath>
       <itemPath>zc_h11aa1.h</itemPath>
+      <itemPath>offset.h</itemPath>
+      <itemPath>gamma.h</itemPath>
+      <itemPath>eeprom.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -22,6 +25,9 @@
       <itemPath>pwm.c</itemPath>
       <itemPath>main.c</itemPath>
       <itemPath>zc_h11aa1.c</itemPath>
+      <itemPath>offset.c</itemPath>
+      <itemPath>gamma.c</itemPath>
+      <itemPath>eeprom.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
