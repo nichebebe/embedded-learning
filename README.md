@@ -89,7 +89,7 @@ RS485通信を応用し、DMX512信号の受信とPWM出力を目標にしてい
 
 学習内容はブログにもまとめています。
 
-- 組み込み制御ラボ  
+- Embedded Control Lab   
   https://embedded-control-lab.com/
 
 ## 目的
