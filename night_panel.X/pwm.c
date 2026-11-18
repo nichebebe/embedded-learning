@@ -45,5 +45,4 @@ void PWM_Apply(uint16_t adc) {
         PWM1S1P1 = duty;
         PWM1CONbits.LD = 1;
     }
-
 }

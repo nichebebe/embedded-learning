@@ -9,12 +9,16 @@
 #include <stdint.h>
 #include "offset.h"
 #include "eeprom.h"
+#include "zc_h11aa1.h"
 
 #define OFFSET_LOW_LIMIT 1638
 #define OFFSET_HIGH_LIMIT 2457
 
 #define EEPROM_LOWER_BASE 0
 #define EEPROM_UPPER_BASE 16
+
+#define EEPROM_MAGIC_ADDR 32
+#define EEPROM_MAGIC_VALUE 0xA5
 
 uint16_t lower_offset[OFFSET_CH_COUNT] = {
     0, 0, 0, 0,
@@ -116,4 +120,22 @@ void Offset_SaveUpper(uint8_t ch)
     }
     
     EEPROM_Write16(EEPROM_UPPER_BASE + (ch * 2), upper_offset[ch]);
+}
+
+void Offset_ResetAll(void)
+{
+    for(uint8_t ch = 0; ch < OFFSET_CH_COUNT; ch++){
+        lower_offset[ch] = 0;
+        upper_offset[ch] = 4095;
+    }
+    
+    Phase_Suspend();
+    
+    for(uint8_t ch = 0; ch < OFFSET_CH_COUNT; ch++){
+        Offset_SaveLower(ch);
+        Offset_SaveUpper(ch);
+    }
+    EEPROM_WriteByte(EEPROM_MAGIC_ADDR, EEPROM_MAGIC_VALUE);
+    
+    Phase_Resume();
 }

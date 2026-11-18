@@ -75,8 +75,10 @@
 #define OFFSET_LOW_LIMIT 1638   // 40%
 #define OFFSET_HIGH_LIMIT 2457  // 60%
 
-#define EEPROM_MAGIC_ADDR 32
-#define EEPROM_MAGIC_VALUE 0xA5
+//#define EEPROM_MAGIC_ADDR 32
+//#define EEPROM_MAGIC_VALUE 0xA5
+
+#define LONG_PRESS_COUNT 300UL    //10ms * 300 = 3s
 
 #define _XTAL_FREQ 20000000
 
@@ -170,10 +172,6 @@ uint16_t ADC_Read_Average(uint8_t channel) {
     return (uint16_t) (total / 8);
 }
 
-//void __interrupt() isr(void){
-//    
-//}
-
 void main(void) {
     PIN_Init();
     ADC_Init();
@@ -189,42 +187,58 @@ void main(void) {
         sw_now = PORTBbits.RB2;
         offset_result_t result[4];
         uint8_t offset_changed = 0;
+        uint16_t press_count = 0;
 
         if ((sw_prev == 1) && (sw_now == 0)) {
             __delay_ms(20);
 
             if (PORTBbits.RB2 == 0) {
+                press_count = 0;
 
-                offset_result_t result[4];
-                uint8_t offset_changed = 0;
+                while (PORTBbits.RB2 == 0) {
+                    __delay_ms(10);
 
-                for (uint8_t ch = 0; ch < 4; ch++) {
-
-                    result[ch] = Offset_SetFromADC(ch, phase_adc[ch]);
-
-                    if (result[ch] != OFFSET_NO_CHANGE) {
-                        offset_changed = 1;
+                    if (press_count < LONG_PRESS_COUNT) {
+                        press_count++;
+                    }
+                    if (press_count >= LONG_PRESS_COUNT) {
+                        break;
                     }
                 }
-                if (offset_changed) {
-                    Phase_Suspend();
+
+
+                if (press_count >= LONG_PRESS_COUNT) {
+                    Offset_ResetAll();
+                    while (PORTBbits.RB2 == 0);
+                    __delay_ms(20);
+                }
+                else {
                     for (uint8_t ch = 0; ch < 4; ch++) {
-                        if (result[ch] == OFFSET_LOWER_CHANGED) {
-                            Offset_SaveLower(ch);
-                        } 
-                        else if (result[ch] == OFFSET_UPPER_CHANGED) {
-                            Offset_SaveUpper(ch);
+
+                        result[ch] = Offset_SetFromADC(ch, phase_adc[ch]);
+
+                        if (result[ch] != OFFSET_NO_CHANGE) {
+                            offset_changed = 1;
                         }
                     }
-                    EEPROM_WriteByte(EEPROM_MAGIC_ADDR, EEPROM_MAGIC_VALUE);
-                    Phase_Resume();
+                    if (offset_changed) {
+                        Phase_Suspend();
+                        for (uint8_t ch = 0; ch < 4; ch++) {
+                            if (result[ch] == OFFSET_LOWER_CHANGED) {
+                                Offset_SaveLower(ch);
+                            } else if (result[ch] == OFFSET_UPPER_CHANGED) {
+                                Offset_SaveUpper(ch);
+                            }
+                        }
+                        EEPROM_WriteByte(EEPROM_MAGIC_ADDR, EEPROM_MAGIC_VALUE);
+                        Phase_Resume();
+                    }
                 }
             }
         }
+
+
         sw_prev = sw_now;
-
-
-
 
         adc_value = ADC_Read_Average(AIN_CH_1);
         PWM_Apply(adc_value);
@@ -242,9 +256,6 @@ void main(void) {
         Phase_SetADC(3, phase_adc[3]);
 
         Phase_PrepareNextEvents();
-
-        //        debug_lower0 = lower_offset[0];
-        //        debug_upper0 = upper_offset[0];
     }
 }
 

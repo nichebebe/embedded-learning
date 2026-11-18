@@ -11,6 +11,8 @@
 #include <stdint.h>
 
 #define OFFSET_CH_COUNT 8
+#define EEPROM_MAGIC_ADDR 32
+#define EEPROM_MAGIC_VALUE 0xA5
 
 extern uint16_t lower_offset[OFFSET_CH_COUNT];
 extern uint16_t upper_offset[OFFSET_CH_COUNT];
@@ -28,7 +30,7 @@ offset_result_t Offset_SetFromADC(uint8_t ch, uint16_t adc);
 void Offset_LoadAll(void);
 void Offset_SaveLower(uint8_t ch);
 void Offset_SaveUpper(uint8_t ch);
-
+void Offset_ResetAll(void);
 #endif
 
 //#ifdef	__cplusplus
