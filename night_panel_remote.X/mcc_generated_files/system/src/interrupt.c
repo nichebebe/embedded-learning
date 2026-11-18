@@ -35,6 +35,8 @@
 #include "../../system/system.h"
 #include "../pins.h"
 
+extern volatile uint32_t tick_ms;
+void TMR2_ISR(void);
 void (*INT_InterruptHandler)(void);
 
 void  INTERRUPT_Initialize (void)
@@ -73,7 +75,7 @@ void __interrupt() INTERRUPT_InterruptManager (void)
         } 
         else if(PIE4bits.TMR2IE == 1 && PIR4bits.TMR2IF == 1)
         {
-            PIR4bits.TMR2IF = 0;
+            TMR2_ISR();
         }
         else
         {
@@ -115,3 +117,9 @@ void INT_DefaultInterruptHandler(void){
 /**
  End of File
 */
+
+void TMR2_ISR(void)
+{
+    PIR4bits.TMR2IF = 0;
+    tick_ms++;
+}

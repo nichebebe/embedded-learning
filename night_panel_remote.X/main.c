@@ -93,7 +93,7 @@ int main(void) {
     // If using interrupts in PIC Mid-Range Compatibility Mode you need to enable the Global and Peripheral Interrupts 
     // Use the following macros to: 
     PIR4bits.TMR2IF = 0;
-    PIE4bits.TMR2IE = 0;
+    PIE4bits.TMR2IE = 1;
 
     // Enable the Peripheral Interrupts 
     INTERRUPT_PeripheralInterruptEnable();
@@ -111,24 +111,12 @@ int main(void) {
 
     LCD_Initialize();
 
-    LCD_SetCursor(0, 0);
-    LCD_Print("A");
-
-    LCD_SetCursor(0, 8);
-    LCD_Print("B");
-
-    LCD_SetCursor(1, 0);
-    LCD_Print("C");
-
-    LCD_SetCursor(1, 8);
-    LCD_Print("D");
-
     while (1) {
         /* 1ms clock */
-        if (PIR4bits.TMR2IF == 1) {
-            PIR4bits.TMR2IF = 0;
-            tick_ms++;
-        }
+//        if (PIR4bits.TMR2IF == 1) {
+//            PIR4bits.TMR2IF = 0;
+//            tick_ms++;
+//        }
 
         /* Periodic transmission every 1 second */
         if ((uint32_t) (tick_ms - last_send_time_ms) >= PERIODIC_SEND_MS) {
