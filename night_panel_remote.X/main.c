@@ -357,7 +357,7 @@ void LCD_PrintPercent(uint8_t value) {
         }
     }
 
-    LCD_Data('P');
+    LCD_Data('%');
 }
 
 void LCD_ShowInputs(uint8_t page) {
