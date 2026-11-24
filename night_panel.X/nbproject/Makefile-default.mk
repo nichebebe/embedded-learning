@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=pwm.c main.c zc_h11aa1.c offset.c gamma.c eeprom.c
+SOURCEFILES_QUOTED_IF_SPACED=pwm.c main.c zc_h11aa1.c offset.c gamma.c eeprom.c rs485.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/pwm.p1 ${OBJECTDIR}/main.p1 ${OBJECTDIR}/zc_h11aa1.p1 ${OBJECTDIR}/offset.p1 ${OBJECTDIR}/gamma.p1 ${OBJECTDIR}/eeprom.p1
-POSSIBLE_DEPFILES=${OBJECTDIR}/pwm.p1.d ${OBJECTDIR}/main.p1.d ${OBJECTDIR}/zc_h11aa1.p1.d ${OBJECTDIR}/offset.p1.d ${OBJECTDIR}/gamma.p1.d ${OBJECTDIR}/eeprom.p1.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/pwm.p1 ${OBJECTDIR}/main.p1 ${OBJECTDIR}/zc_h11aa1.p1 ${OBJECTDIR}/offset.p1 ${OBJECTDIR}/gamma.p1 ${OBJECTDIR}/eeprom.p1 ${OBJECTDIR}/rs485.p1
+POSSIBLE_DEPFILES=${OBJECTDIR}/pwm.p1.d ${OBJECTDIR}/main.p1.d ${OBJECTDIR}/zc_h11aa1.p1.d ${OBJECTDIR}/offset.p1.d ${OBJECTDIR}/gamma.p1.d ${OBJECTDIR}/eeprom.p1.d ${OBJECTDIR}/rs485.p1.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/pwm.p1 ${OBJECTDIR}/main.p1 ${OBJECTDIR}/zc_h11aa1.p1 ${OBJECTDIR}/offset.p1 ${OBJECTDIR}/gamma.p1 ${OBJECTDIR}/eeprom.p1
+OBJECTFILES=${OBJECTDIR}/pwm.p1 ${OBJECTDIR}/main.p1 ${OBJECTDIR}/zc_h11aa1.p1 ${OBJECTDIR}/offset.p1 ${OBJECTDIR}/gamma.p1 ${OBJECTDIR}/eeprom.p1 ${OBJECTDIR}/rs485.p1
 
 # Source Files
-SOURCEFILES=pwm.c main.c zc_h11aa1.c offset.c gamma.c eeprom.c
+SOURCEFILES=pwm.c main.c zc_h11aa1.c offset.c gamma.c eeprom.c rs485.c
 
 
 
@@ -136,6 +136,14 @@ ${OBJECTDIR}/eeprom.p1: eeprom.c  nbproject/Makefile-${CND_CONF}.mk
 	@-${MV} ${OBJECTDIR}/eeprom.d ${OBJECTDIR}/eeprom.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/eeprom.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
+${OBJECTDIR}/rs485.p1: rs485.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/rs485.p1.d 
+	@${RM} ${OBJECTDIR}/rs485.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c  -D__DEBUG=1  -mdebugger=pickit5   -mdfp="${DFP_DIR}/xc8"  -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/rs485.p1 rs485.c 
+	@-${MV} ${OBJECTDIR}/rs485.d ${OBJECTDIR}/rs485.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/rs485.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
 else
 ${OBJECTDIR}/pwm.p1: pwm.c  nbproject/Makefile-${CND_CONF}.mk 
 	@${MKDIR} "${OBJECTDIR}" 
@@ -184,6 +192,14 @@ ${OBJECTDIR}/eeprom.p1: eeprom.c  nbproject/Makefile-${CND_CONF}.mk
 	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/eeprom.p1 eeprom.c 
 	@-${MV} ${OBJECTDIR}/eeprom.d ${OBJECTDIR}/eeprom.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/eeprom.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/rs485.p1: rs485.c  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/rs485.p1.d 
+	@${RM} ${OBJECTDIR}/rs485.p1 
+	${MP_CC} $(MP_EXTRA_CC_PRE) -mcpu=$(MP_PROCESSOR_OPTION) -c   -mdfp="${DFP_DIR}/xc8"  -memi=wordwrite -O0 -fasmfile -maddrqual=ignore -xassembler-with-cpp -mwarn=-3 -Wa,-a -DXPRJ_default=$(CND_CONF)  -msummary=-psect,-class,+mem,-hex,-file  -ginhx32 -Wl,--data-init -mno-keep-startup -mno-download -mno-default-config-bits $(COMPARISON_BUILD)  -std=c99 -gdwarf-3 -mstack=compiled:auto:auto:auto     -o ${OBJECTDIR}/rs485.p1 rs485.c 
+	@-${MV} ${OBJECTDIR}/rs485.d ${OBJECTDIR}/rs485.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/rs485.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
 endif
 

@@ -13,6 +13,7 @@
 #include "offset.h"
 #include "gamma.h"
 #include "eeprom.h"
+#include "rs485.h"
 
 // CONFIG1
 #pragma config FEXTOSC = HS     // External Oscillator Selection (HS (crystal oscillator) above 8 MHz)
@@ -178,12 +179,16 @@ void main(void) {
     PWM_Init();
     Zc_Init();
     Phase_Timer0_Init();
+    RS485_Init();
 
     if (EEPROM_ReadByte(EEPROM_MAGIC_ADDR) == EEPROM_MAGIC_VALUE) {
         Offset_LoadAll();
     }
 
     while (1) {
+        
+        RS485_Task();
+        
         sw_now = PORTBbits.RB2;
         offset_result_t result[4];
         uint8_t offset_changed = 0;
