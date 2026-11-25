@@ -7,6 +7,36 @@
 
 #include <xc.h>
 #include <stdint.h>
+#include "rs485.h"
+
+#define RS485_RX_BUFFER_SIZE    64
+#define RS485_START_CODE    0xAA
+#define RS485_FRAME_SIZE    19
+#define RS485_ADC_CHANNEL_COUNT 8
+
+static volatile uint8_t rx_buffer[RS485_RX_BUFFER_SIZE];
+
+static volatile uint8_t rx_head = 0;
+static volatile uint8_t rx_tail = 0;
+
+static volatile uint16_t framing_error_count = 0;
+static volatile uint16_t overrun_error_count = 0;
+static volatile uint16_t checksum_error_count = 0;
+
+static volatile uint16_t buffer_full_count = 0;
+static uint8_t checksum = 0;
+
+typedef enum {
+    RS485_WAIT_START,
+    RS485_RECEIVING
+}rs485_state_t;
+
+static rs485_state_t rs485_state = RS485_WAIT_START;
+
+static uint8_t frame_buffer[RS485_FRAME_SIZE];
+static uint8_t frame_index = 0;
+
+static uint16_t remote_adc[RS485_ADC_CHANNEL_COUNT];
 
 void RS485_Init(void)
 {
@@ -56,23 +86,105 @@ void RS485_Init(void)
     // UART1
     U1CON0bits.ABDEN = 0;       //Auto-baud is not enabled or auto-baud is complete
     U1CON0bits.TXEN = 0;
-
-}
-
-void RS485_Task(void){
-    if(PIR4bits.U1RXIF){
-        volatile uint8_t data = U1RXB;
-        
-        if(data == 0xAA){
-            LATBbits.LATB1 ^= 1;
-        }     
-    }
     
-    if(U1ERRIRbits.RXFOIF){
-        U1ERRIRbits.RXFOIF = 0;
+    PIE4bits.U1RXIE = 1;
+
+}
+
+void RS485_Task(void)
+{
+    while (rx_head != rx_tail){
+        
+        uint8_t data = rx_buffer[rx_tail];
+        
+        rx_tail++;
+        
+        if(rx_tail >= RS485_RX_BUFFER_SIZE){
+            rx_tail = 0;
+        }
+        
+        switch(rs485_state){
+            case RS485_WAIT_START:
+                if(data == RS485_START_CODE){
+                    frame_index = 0;
+                    checksum = 0;
+                    
+                    frame_buffer[frame_index] = data;
+                    frame_index++;
+                    
+                    rs485_state = RS485_RECEIVING;
+                }
+                break;
+                
+            case RS485_RECEIVING:
+                
+                frame_buffer[frame_index] = data;
+                
+                if(frame_index < RS485_FRAME_SIZE - 1){
+                    checksum += data;
+                }
+                
+                frame_index++;
+                
+                if(frame_index >= RS485_FRAME_SIZE){
+                    
+                    if(checksum != frame_buffer[RS485_FRAME_SIZE - 1]){
+                        checksum_error_count++;
+                    }
+                    else{
+                        LATBbits.LATB1 ^= 1;
+                        
+                        for(uint8_t i = 0; i < RS485_ADC_CHANNEL_COUNT; i++){
+                            
+                            uint8_t index = i * 2 + 2;
+                            
+                            remote_adc[i] = ((uint16_t)frame_buffer[index] << 8)
+                                            | frame_buffer[index + 1];
+                        }
+                    }
+                    
+                    frame_index = 0;
+                    rs485_state = RS485_WAIT_START;
+                }
+                break;
+        }
     }
 }
 
+void __interrupt(irq(IRQ_U1RX)) RS485_RX_ISR(void)
+{
+    while(PIR4bits.U1RXIF){
+        uint8_t ferr = U1ERRIRbits.FERIF;
+        uint8_t data = U1RXB;
+        
+        //Framing error
+        if(ferr){
+            framing_error_count++;
+            continue;
+        }
+        
+        //Calculate next head
+        uint8_t next_head = rx_head + 1;
+        
+        if(next_head >= RS485_RX_BUFFER_SIZE){
+            next_head = 0;
+        }
+        
+        // Ring Buffer
+        if(next_head != rx_tail){
+            rx_buffer[rx_head] = data;
+            rx_head = next_head;
+        }
+        else{
+            buffer_full_count++;
+        }        
+    }
+    // Hardware FIFO overflow
+    if(U1ERRIRbits.RXFOIF) {
+        U1ERRIRbits.RXFOIF = 0;
+        overrun_error_count++;
+    }
+}
 /*
 1. Initialize the UxBRG register pair and the BRGS bit to achieve the desired baud rate. 
 2. Configure the RXPPS register for the desired RX pin.
