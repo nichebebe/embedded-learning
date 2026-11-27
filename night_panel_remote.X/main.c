@@ -165,13 +165,30 @@ int main(void) {
         // Get ADC value
         for (uint8_t i = 0; i < ADC_CHANNEL_COUNT; i++) {
             input_value[i] = ADC_ReadAverage(input_channel[i]);
-            if (abs(input_value[i] - last_sent_value[i]) >= 3) {
+            if (abs(input_value[i] - last_sent_value[i]) >= 10) {
                 send_request = 1;
             }
         }
 
         // RS-485 send
         if (send_request) {
+//            //test code
+//            RS485_DE_SetHigh();
+//
+//            EUSART1_Write(START_CODE);
+//            while (!TX1STAbits.TRMT) {
+//            }
+//            
+//            for(uint8_t i = 0; i < 10; i++){
+//                EUSART1_Write(0x00);
+//                while(!TX1STAbits.TRMT){
+//                    
+//                }
+//            }
+//            
+//            RS485_DE_SetLow();
+//            
+//            __delay_ms(10);
 
             check = 0;
 
